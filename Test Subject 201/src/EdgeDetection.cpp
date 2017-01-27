@@ -7,36 +7,28 @@
 
 #include <EdgeDetection.h>
 
-EdgeDetection::EdgeDetection(bool inital) :
-lastState(inital),
-thisState(inital)
+Edge::Edge(bool inital) :
+lastTime(inital),
+thisTime(inital)
 {
 }
 
-void EdgeDetection::update(bool state)
+void Edge::update(bool state)
 {
-	lastState=thisState;
-	thisState = state;
+	lastTime=thisTime;
+	thisTime = state;
 }
 
-bool EdgeDetection::isEdge()
+bool Edge::isPressed()
 {
-	return thisState != lastState;
+	return (thisTime == true && lastTime == false);
+
 }
 
-bool EdgeDetection::isRising()
-{
-	return (thisState == true && lastState == false);
-}
+bool Edge::getState(){
 
-bool EdgeDetection::isFalling()
-{
-	return (thisState == false && lastState == true);
-}
+	return thisTime;
 
-bool EdgeDetection::getState()
-{
-	return thisState;
 }
 
 

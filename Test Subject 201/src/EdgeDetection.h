@@ -8,19 +8,17 @@
 #ifndef SRC_EDGEDETECTION_H_
 #define SRC_EDGEDETECTION_H_
 
-class EdgeDetection {
+class Edge {
 public:
-	EdgeDetection(bool inital=false);
+	Edge(bool inital=false);
 	void update(bool state);
 
-	bool isEdge();
-	bool isRising();
-	bool isFalling();
+	bool isPressed();
 	bool getState();
 
 private:
-	bool lastState;
-	bool thisState;
+	bool lastTime;
+	bool thisTime;
 };
 
 #endif /* SRC_EDGEDETECTION_H_ */
