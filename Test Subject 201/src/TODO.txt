@@ -1,4 +1,8 @@
 (Rohan) Program limit using 1. IR distance sensor or 2. Limit switch or 3. Camera distance from point 2.
 (Rohan) Program encoder-based inputs for side autonomous codes. they should drive up, turn, then check for reflective tape.
 (Rohan) Get mag incoder inputs for auton
-(Rohan) Clapper wants to shoot in auton. this is by far THE LAST PRIORITY. If you really want to do this this can be an exersize for the mew members. Use the IR sensor to avoid crashes if you do this and you need the Green eye of death at max power. Recalibrate grip spicificallly for the upper goal and not with the grip calibrations of the gear pickup as lighting is different at that distance and elevation 
+(Rohan) Clapper wants to shoot in auton. this is by far THE LAST PRIORITY. 
+If you really want to do this this can be an exersize for the mew members. 
+Use the IR sensor to avoid crashes if you do this and you need the Green eye of death at max power.
+ Recalibrate grip spicificallly for the upper goal and not with the grip calibrations of the gear pickup as -
+ - lighting is different at that distance and elevation 

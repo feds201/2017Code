@@ -11,6 +11,9 @@
 #include"CANTalon.h"
 #include"EdgeDetection.h"
 #include"DriveTrain.h"
+#include"Auton.h"
+#include"Vision.h"
+
 class Robot: public frc::SampleRobot {
 	Joystick joy;
 	std::shared_ptr<NetworkTable> table;
@@ -20,6 +23,7 @@ class Robot: public frc::SampleRobot {
 	Timer time;
 	AnalogInput ultrasonic;
 	DriveTrain drivetrain;
+	Vision vision;
 
 	static void startcam(){
 
@@ -44,14 +48,17 @@ class Robot: public frc::SampleRobot {
 public:
 	Robot() :
 		joy(0), table(NetworkTable::GetTable("GRIP/myContoursReport")), ir(0),
-		light(5), change(joy.GetRawButton(1)), ultrasonic(0), drivetrain(3, 4, 1, 2, 5, 1, 2, 3, 4)
+		light(5), change(joy.GetRawButton(1)), ultrasonic(0), drivetrain(3, 4, 1, 2, 5, 1, 2, 3, 4), vision()
 	{
 		light.SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 
-
 	}
 
-double Vision(){
+/*
+
+DELETE THIS ONCE WE KNOW IT WORKS WITHOUT IT
+
+ double Vision(){
 
 				double dist;
 				double cenx;
@@ -112,6 +119,8 @@ double Vision(){
 
 	}
 
+*/
+
 	void RobotInit() {
 		std::thread visionThread(startcam);
 		visionThread.detach();
@@ -130,7 +139,7 @@ double Vision(){
 
 		iroutput = ir.Get();
 
-		dist = (Vision()/3000);
+		dist = (vision.Update()/3000);
 
 	if(iroutput){
 		time.Start();
@@ -184,10 +193,9 @@ float deadzone(float raw)
 		bool lighton = false;
 		while (IsOperatorControl() && IsEnabled()) {
 
-			Vision();
+			vision.Update();
 
 			change.update(joy.GetRawButton(1));
-
 
 
 			if(change.isPressed()){
