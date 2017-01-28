@@ -146,7 +146,7 @@ DELETE THIS ONCE WE KNOW IT WORKS WITHOUT IT
 		time.Reset();
 		while(time.Get() < 4){
 			drivetrain.Drive(0, 0);
-		light.Set(0);
+			light.Set(0);
 		}
 		time.Reset();
 		while(time.Get() < 2){
@@ -163,12 +163,6 @@ DELETE THIS ONCE WE KNOW IT WORKS WITHOUT IT
 	light.Set(1);
 
 	}
-
-
-
-
-
-
 
 			}
 

@@ -33,6 +33,9 @@ DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t 
 	slist->shifter1 = new DoubleSolenoid(slist->PCMid, slist->shifterfwd, slist->shiferrev);
 	slist->shifter2 = new DoubleSolenoid(slist->PCMid, slist->shifter2fwd, slist->shifter2rev);
 
+	mlist->Lmotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
+	mlist->Rmotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
+
 
 
 
