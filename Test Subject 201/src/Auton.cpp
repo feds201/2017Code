@@ -11,11 +11,11 @@
 #include "Vision.h"
 #include <timer.h>
 
-Auton::Auton(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, int PCMCanid, int shifter1fwd,int shifter1rev, int shifter2fwd, int shifter2rev) {
+Auton::Auton(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, int PCMCanid, int shifter1fwd, int shifter1rev) {
 
 	alist = new struct autonList;
 
-	alist->drivetrain = new DriveTrain(Lcanid, Lcanid2, Rcanid, Rcanid2, PCMCanid, shifter1fwd, shifter1rev, shifter2fwd, shifter2rev);
+	alist->drivetrain = new DriveTrain(Lcanid, Lcanid2, Rcanid, Rcanid2, PCMCanid, shifter1fwd, shifter1rev);
 
 	alist->stop = false;
 
@@ -54,32 +54,49 @@ Auton::Auton(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, i
 
 }
 
-void Auton::Run(){
+bool Auton::Run(){
 
 	if(alist->Pos == Left){
 
 		if(alist->Mode == Gear){
 
 			if(alist->Color == Red){
-				//motor controls here
+				//Red, Left, Gear
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}else if(alist->Color == Blue){
-				//motor controls here
+				//Blue, Left, Gear
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}
 
 		}else if(alist->Mode == Shoot){
 
 			if(alist->Color == Red){
 				//NOT USING THIS, PRINT ERROR
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}else if(alist->Color == Blue){
-				//motor controls here
+				//Blue, Left, Shoot
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}
 
 		}else if(alist->Mode == GearAndShoot){
 
 			if(alist->Color == Red){
 				//NOT USING THIS, PRINT ERROR
+
+				alist->stop = true;
 			}else if(alist->Color == Blue){
-				//motor controls here
+				//Blue, Left, Gear and Shoot
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}
 
 		}
@@ -90,25 +107,43 @@ void Auton::Run(){
 		if(alist->Mode == Gear){
 
 			if(alist->Color == Red){
-				//motor controls here
+				//Red, Right, Gear
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}else if(alist->Color == Blue){
-				//motor controls here
+				//Blue, Right, Gear
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}
 
 		}else if(alist->Mode == Shoot){
 
 			if(alist->Color == Red){
-				//motor controls here
+				//Red, Right, Shoot
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}else if(alist->Color == Blue){
 				//NOT USING THIS, PRINT ERROR
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}
 
 		}else if(alist->Mode == GearAndShoot){
 
 			if(alist->Color == Red){
-				//motor controls here
+				//Red, Right, Gear and Shoot
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}else if(alist->Color == Blue){
 				//NOT USING THIS, PRINT ERROR
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}
 
 		}
@@ -120,10 +155,12 @@ void Auton::Run(){
 			//COPY OF CODE FORM Robot.cpp
 			//Drives Robot Toward The Gear Hook
 
+			//Red and Blue, Center, Gear
+
 			alist->dist = alist->vision->Update();
 			alist->iroutput = alist->IR->Get();
 
-			if(alist->iroutput){
+			if(alist->iroutput) /* What Runs When The Bot Is Close To Target */{
 					alist->time.Start();
 					alist->time.Reset();
 					while(alist->time.Get() < 4){
@@ -131,16 +168,20 @@ void Auton::Run(){
 					}
 					alist->time.Reset();
 					while(alist->time.Get() < 2){
-					SmartDashboard::PutNumber("Timer", alist->time.Get());
-					alist->drivetrain->Drive(0, 0.2);
+						SmartDashboard::PutNumber("Timer", alist->time.Get());
+						alist->drivetrain->Drive(0, 0.2);
 					}
 					alist->drivetrain->Drive(0,0);
-					alist->stop = true;
+					alist->stop = true; //Stops Auton
 
-				}else if(alist->stop == false){
+			}else /* What Runs When Bot Is Not Close To Target */ {
 
 				alist->drivetrain->Drive(-0.2, alist->dist);
 
+				alist->stop = false;
+
+
+				//END
 
 				}
 
@@ -151,20 +192,38 @@ void Auton::Run(){
 		}else if(alist->Mode == Shoot){
 
 			if(alist->Color == Red){
-				//motor controls here
+				//Red, Center, Shoot
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}else if(alist->Color == Blue){
-				//motor controls here
+				//Blue, Center, Shoot
+
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}
 
 		}else if(alist->Mode == GearAndShoot){
 
 			if(alist->Color == Red){
+				//Red, Center, Gear and Shoot
 
+				alist->stop = true; //Change This When Code Is Done
+				//END
 			}else if(alist->Color == Blue){
+				//Blue, Center, Gear and Shoot
 
+				alist->stop = true; //Change This When Code Is Done
+				//END
+			}else{
+
+				//Default Stops Auton
+
+				alist->stop = true;
 			}
-
 		}
+
+	return alist->stop;
 
 	}
 

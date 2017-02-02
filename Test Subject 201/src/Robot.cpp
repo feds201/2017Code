@@ -13,6 +13,7 @@
 #include"DriveTrain.h"
 #include"Auton.h"
 #include"Vision.h"
+#include "Auton.h"
 
 class Robot: public frc::SampleRobot {
 	Joystick joy;
@@ -24,6 +25,8 @@ class Robot: public frc::SampleRobot {
 	AnalogInput ultrasonic;
 	DriveTrain drivetrain;
 	Vision vision;
+	Auton auton;
+	Edge shift;
 
 	static void startcam(){
 
@@ -48,7 +51,8 @@ class Robot: public frc::SampleRobot {
 public:
 	Robot() :
 		joy(0), table(NetworkTable::GetTable("GRIP/myContoursReport")), ir(0),
-		light(5), change(joy.GetRawButton(1)), ultrasonic(0), drivetrain(3, 4, 1, 2, 5, 1, 2, 3, 4), vision()
+		light(5), change(joy.GetRawButton(1)), ultrasonic(0), drivetrain(3, 4, 1, 2, 5, 0, 1), vision(), auton(3, 4, 1, 2, 5, 1, 2),
+		shift(joy.GetRawButton(1))
 	{
 		light.SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 
@@ -129,6 +133,10 @@ DELETE THIS ONCE WE KNOW IT WORKS WITHOUT IT
 
 	void Autonomous() {
 
+		/*
+
+		Original Auton Code
+
 		time.Reset();
 
 		float dist;
@@ -166,8 +174,19 @@ DELETE THIS ONCE WE KNOW IT WORKS WITHOUT IT
 
 			}
 
+*/
 
-			frc::Wait(0.005);
+		bool isauton = true;
+
+		while(isauton){
+
+			isauton = auton.Run();
+
+		}
+
+
+
+		frc::Wait(0.005);
 		}
 
 
@@ -184,15 +203,19 @@ float deadzone(float raw)
 }
 
 	void OperatorControl() override {
-		bool lighton = false;
+		//bool lighton = false;
 		while (IsOperatorControl() && IsEnabled()) {
 
 			vision.Update();
 
-			change.update(joy.GetRawButton(1));
+			//change.update(joy.GetRawButton(1));
 
+			shift.update(joy.GetRawButton(1));
 
-			if(change.isPressed()){
+			if(shift.isPressed())
+				drivetrain.Shift();
+
+			/*if(change.isPressed()){
 
 				if(!lighton){
 				light.Set(1);
@@ -203,7 +226,7 @@ float deadzone(float raw)
 				}
 			}
 
-
+			*/
 
 			drivetrain.Drive(deadzone(joy.GetRawAxis(1)), deadzone(joy.GetRawAxis(4)));
 

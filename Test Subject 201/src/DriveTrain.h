@@ -15,9 +15,11 @@ class DriveTrain {
 public:
 
 	DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, int PCMCanid, int shifter1fwd,
-			int shifter1rev, int shifter2fwd, int shifter2rev);
+			int shifter1rev);
 
 	void Drive(float fwd, float trn);
+
+	void Shift();
 
 	enum motorSide{leftSide, rightSide};
 
@@ -47,13 +49,10 @@ private:
 	struct shifterlist{
 
 		DoubleSolenoid *shifter1;
-		DoubleSolenoid *shifter2;
 
 		int PCMid;
 		int shifterfwd;
 		int shiferrev;
-		int shifter2fwd;
-		int shifter2rev;
 
 	};
 

@@ -16,8 +16,8 @@
 class Auton {
 public:
 
-	Auton(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, int PCMCanid, int shifter1fwd,int shifter1rev, int shifter2fwd, int shifter2rev);
-	void Run();
+	Auton(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, int PCMCanid, int shifter1fwd,int shifter1rev);
+	bool Run();
 
 
 

@@ -9,7 +9,7 @@
 #include "WPILib.h"
 #include "CANTalon.h"
 
-DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, int PCMCanid, int shifter1fwd,int shifter1rev, int shifter2fwd, int shifter2rev) {
+DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, int PCMCanid, int shifter1fwd,int shifter1rev) {
 
 	mlist = new struct motorlist;
 	slist = new struct shifterlist;
@@ -22,8 +22,6 @@ DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t 
 	slist->PCMid = PCMCanid;
 	slist->shifterfwd = shifter1fwd;
 	slist->shiferrev = shifter1rev;
-	slist->shifter2fwd = shifter2fwd;
-	slist->shifter2rev = shifter2rev;
 
 	mlist->Lmotor1 = new CANTalon(mlist->Lmotorcanid);
 	mlist->Lmotor2 = new CANTalon(mlist->Lmotor2canid);
@@ -31,7 +29,6 @@ DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t 
 	mlist->Rmotor2 = new CANTalon(mlist->Rmotor2canid);
 
 	slist->shifter1 = new DoubleSolenoid(slist->PCMid, slist->shifterfwd, slist->shiferrev);
-	slist->shifter2 = new DoubleSolenoid(slist->PCMid, slist->shifter2fwd, slist->shifter2rev);
 
 	mlist->Lmotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
 	mlist->Rmotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
@@ -43,14 +40,25 @@ DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t 
 
 void DriveTrain::Drive(float fwd, float trn){
 
-	mlist->Lmotors = fwd - trn;
-	mlist->Rmotors = fwd + trn;
+	mlist->Lmotors = fwd - trn/2;
+	mlist->Rmotors = fwd + trn/2;
 
 	mlist->Lmotor1->Set(mlist->Lmotors);
 	mlist->Lmotor2->Set(mlist->Lmotors);
 
-	mlist->Rmotor1->Set(mlist->Rmotors);
+	mlist->Rmotor1->Set(-mlist->Rmotors);
 	mlist->Rmotor2->Set(mlist->Rmotors);
+
+}
+
+
+void DriveTrain::Shift(){
+
+	if(slist->shifter1->Get() == frc::DoubleSolenoid::Value::kForward){
+		slist->shifter1->Set(frc::DoubleSolenoid::Value::kReverse);
+	}else{
+		slist->shifter1->Set(frc::DoubleSolenoid::Value::kForward);
+	}
 
 }
 
