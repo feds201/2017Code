@@ -46,7 +46,7 @@ void DriveTrain::Drive(float fwd, float trn){
 	mlist->Lmotor1->Set(mlist->Lmotors);
 	mlist->Lmotor2->Set(mlist->Lmotors);
 
-	mlist->Rmotor1->Set(-mlist->Rmotors);
+	mlist->Rmotor1->Set(mlist->Rmotors);
 	mlist->Rmotor2->Set(mlist->Rmotors);
 
 }

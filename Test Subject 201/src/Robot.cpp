@@ -11,21 +11,10 @@
 #include"CANTalon.h"
 #include"EdgeDetection.h"
 #include"DriveTrain.h"
-#include"Auton.h"
-#include"Vision.h"
-#include "Auton.h"
 
 class Robot: public frc::SampleRobot {
 	Joystick joy;
-	std::shared_ptr<NetworkTable> table;
-	DigitalInput ir;
-	CANTalon light;
-	Edge change;
-	Timer time;
-	AnalogInput ultrasonic;
 	DriveTrain drivetrain;
-	Vision vision;
-	Auton auton;
 	Edge shift;
 
 	static void startcam(){
@@ -50,11 +39,8 @@ class Robot: public frc::SampleRobot {
 
 public:
 	Robot() :
-		joy(0), table(NetworkTable::GetTable("GRIP/myContoursReport")), ir(0),
-		light(5), change(joy.GetRawButton(1)), ultrasonic(0), drivetrain(3, 4, 1, 2, 5, 0, 1), vision(), auton(3, 4, 1, 2, 5, 1, 2),
-		shift(joy.GetRawButton(1))
+		joy(0), drivetrain(3, 4, 7, 5, 8, 2, 3), shift(joy.GetRawButton(1))
 	{
-		light.SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 
 	}
 
@@ -176,37 +162,27 @@ DELETE THIS ONCE WE KNOW IT WORKS WITHOUT IT
 
 */
 
-		bool isauton = true;
-
-		while(isauton){
-
-			isauton = auton.Run();
 
 		}
 
 
 
-		frc::Wait(0.005);
-		}
-
-
-
-float deadzone(float raw)
-{
-	if(fabs(raw)<.15){
-		return 0.0f;
-	}else if(raw>0){
-		return (raw-.15)/(1-.15);
-	}else{
-		return (+.15)/(1-.15);
-	}
-}
+	float deadzone(float f)
+						{
+							if(fabs(f)<.15)
+								return 0.0f;
+							else
+							{
+								if(f>0)
+									return (f-.15)/(1-.15);
+								else
+									return (f+.15)/(1-.15);
+							}
+						}
 
 	void OperatorControl() override {
-		//bool lighton = false;
-		while (IsOperatorControl() && IsEnabled()) {
 
-			vision.Update();
+		while (IsOperatorControl() && IsEnabled()) {
 
 			//change.update(joy.GetRawButton(1));
 
@@ -215,23 +191,8 @@ float deadzone(float raw)
 			if(shift.isPressed())
 				drivetrain.Shift();
 
-			/*if(change.isPressed()){
 
-				if(!lighton){
-				light.Set(1);
-				lighton = true;
-				}else{
-				light.Set(0);
-				lighton = false;
-				}
-			}
-
-			*/
-
-			drivetrain.Drive(deadzone(joy.GetRawAxis(1)), deadzone(joy.GetRawAxis(4)));
-
-			SmartDashboard::PutBoolean("IR", ir.Get());
-			SmartDashboard::PutNumber("Ultrasonic", ultrasonic.GetValue()/0.37203);
+			drivetrain.Drive(deadzone(joy.GetRawAxis(4)), deadzone(joy.GetRawAxis(1)));
 
 			frc::Wait(0.005);
 		}
