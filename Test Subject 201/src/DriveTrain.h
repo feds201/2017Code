@@ -17,7 +17,7 @@ public:
 	DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, int PCMCanid, int shifter1fwd,
 			int shifter1rev);
 
-	void Drive(float fwd, float trn);
+	void Drive(float trn, float fwd);
 
 	void Shift();
 
