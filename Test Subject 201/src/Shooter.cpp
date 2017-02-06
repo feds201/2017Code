@@ -8,22 +8,22 @@
 #include"WPILib.h"
 #include"CANTalon.h"
 
-Shooter::Shooter(){
+Shooter::Shooter(uint8_t canid, uint8_t canid2){
 
 	slist = new struct shooterlist;
 
-	slist->shooter1 = new CANTalon(1);
-	slist->shooter2 = new CANTalon(2);
+	slist->shooter1 = new CANTalon(canid);
+	slist->shooter2 = new CANTalon(canid2);
 
-	slist->shooter1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
-	slist->shooter2->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
+	slist->shooter1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+	slist->shooter2->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 
 	slist->shooter1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
 	slist->shooter2->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
 
 	slist->shoot = new DoubleSolenoid(8, 4, 5);
 
-	slist->speed = 0;
+	slist->speed = 0.5;
 
 }
 

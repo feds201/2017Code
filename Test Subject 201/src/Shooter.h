@@ -15,7 +15,7 @@ class Shooter{
 
 public:
 
-	Shooter();
+	Shooter(uint8_t canid, uint8_t canid2);
 	void SpinUp();
 	void UpdateSpeed(float speed);
 	void Shoot();
