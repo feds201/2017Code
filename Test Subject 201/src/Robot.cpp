@@ -13,8 +13,20 @@
 #include"DriveTrain.h"
 #include"GearFlipper.h"
 #include"Lifter.h"
-#include"Pickup.h"
+//#include"Pickup.h"
 #include"Shooter.h"
+
+
+/*
+
+ Pickup Class Crashed Program
+
+ Can't Turn Off Lifter
+
+ Can't Fire Shooter
+
+ */
+
 
 class Robot: public frc::SampleRobot {
 	Joystick joy;
@@ -24,7 +36,7 @@ class Robot: public frc::SampleRobot {
 	std::shared_ptr<NetworkTable> table;
 	GearFlipper flipper;
 	Lifter lifter;
-	Pickup pickup;
+	//Pickup pickup;
 	Shooter shooter;
 	Edge flip;
 	Edge lift;
@@ -46,13 +58,14 @@ class Robot: public frc::SampleRobot {
 public:
 	Robot() :
 		joy(0), drivetrain(3, 4, 7, 5, 8, 2, 3), shift(joy.GetRawButton(1)), table(NetworkTable::GetTable("GRIP/myContoursReport")),
-		flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy.GetRawButton(5)), lift(joy.GetRawButton(4)), shoot(joy.GetRawButton(6)),
+		flipper(), lifter(0), /* pickup(6), */ shooter(1, 2), flip(joy.GetRawButton(5)), lift(joy.GetRawButton(4)), shoot(joy.GetRawButton(6)),
 		pick(joy.GetRawButton(3)), speedup(joy.GetRawButton(8)), speeddown(joy.GetRawButton(7)), SpinUp(joy.GetRawButton(2))
 	{
 
 	}
 
- double Vision(){
+/*
+double Vision(){
 
 				double dist;
 				double cenx;
@@ -113,7 +126,7 @@ public:
 
 	}
 
-
+*/
 
 	void RobotInit() {
 		std::thread visionThread(startcam);
@@ -123,7 +136,7 @@ public:
 
 	void Autonomous() {
 
-
+/*
 		time.Reset();
 
 		int state;
@@ -184,6 +197,7 @@ public:
 			}
 			}
 					frc::Wait(0.005);
+*/
 
 		}
 
@@ -221,11 +235,18 @@ float deadzone(float f)
 			if(shift.isPressed())
 				drivetrain.Shift();
 
+
+
 			if(flip.isPressed())
 				flipper.Toggle();
 
+
+
 			if(lift.isPressed())
 				lifter.Toggle();
+
+
+
 
 			if(shoot.isPressed())
 				shooter.Shoot();
@@ -250,8 +271,12 @@ float deadzone(float f)
 				shooter.UpdateSpeed(speed);
 			}
 
+
+/*
 			if(pick.isPressed())
 				pickup.Toggle();
+
+*/
 
 			drivetrain.Drive(deadzone(joy.GetRawAxis(4)), deadzone(joy.GetRawAxis(1)));
 
