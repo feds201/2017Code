@@ -11,6 +11,10 @@
 #include"CANTalon.h"
 #include"EdgeDetection.h"
 #include"DriveTrain.h"
+#include"GearFlipper.h"
+#include"Lifter.h"
+#include"Pickup.h"
+#include"Shooter.h"
 
 class Robot: public frc::SampleRobot {
 	Joystick joy;
@@ -18,6 +22,17 @@ class Robot: public frc::SampleRobot {
 	Edge shift;
 	Timer time;
 	std::shared_ptr<NetworkTable> table;
+	GearFlipper flipper;
+	Lifter lifter;
+	Pickup pickup;
+	Shooter shooter;
+	Edge flip;
+	Edge lift;
+	Edge shoot;
+	Edge pick;
+	Edge speedup;
+	Edge speeddown;
+	Edge SpinUp;
 
 	static void startcam(){
 
@@ -26,11 +41,13 @@ class Robot: public frc::SampleRobot {
 
 	}
 
-	enum autonstate{outOfView, inRangeL, inRangeR, inRange, inView, largeAngle};
+	enum autonstate{outOfView, inRangeL, inRangeR, inRange, inView};
 
 public:
 	Robot() :
-		joy(0), drivetrain(3, 4, 7, 5, 8, 2, 3), shift(joy.GetRawButton(1)), table(NetworkTable::GetTable("GRIP/myContoursReport"))
+		joy(0), drivetrain(3, 4, 7, 5, 8, 2, 3), shift(joy.GetRawButton(1)), table(NetworkTable::GetTable("GRIP/myContoursReport")),
+		flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy.GetRawButton(5)), lift(joy.GetRawButton(4)), shoot(joy.GetRawButton(6)),
+		pick(joy.GetRawButton(3)), speedup(joy.GetRawButton(8)), speeddown(joy.GetRawButton(7)), SpinUp(joy.GetRawButton(2))
 	{
 
 	}
@@ -187,13 +204,54 @@ float deadzone(float f)
 
 	void OperatorControl() override {
 
+		float speed = 0.7;
+		bool ison = false;
+
 		while (IsOperatorControl() && IsEnabled()) {
 
 			shift.update(joy.GetRawButton(1));
+			flip.update(joy.GetRawButton(5));
+			lift.update(joy.GetRawButton(4));
+			shoot.update(joy.GetRawButton(6));
+			pick.update(joy.GetRawButton(3));
+			speedup.update(joy.GetRawButton(8));
+			speeddown.update(joy.GetRawButton(7));
+			SpinUp.update(joy.GetRawButton(2));
 
 			if(shift.isPressed())
 				drivetrain.Shift();
 
+			if(flip.isPressed())
+				flipper.Toggle();
+
+			if(lift.isPressed())
+				lifter.Toggle();
+
+			if(shoot.isPressed())
+				shooter.Shoot();
+
+			if(SpinUp.isPressed()){
+				if(ison == false){
+				shooter.SpinUp();
+				ison = true;
+				}else{
+					shooter.Stop();
+					ison = false;
+				}
+			}
+
+			if(speedup.isPressed()){
+				speed+=0.05;
+				shooter.UpdateSpeed(speed);
+			}
+
+			if(speeddown.isPressed()){
+				speed-=0.05;
+				shooter.UpdateSpeed(speed);
+			}
+
+			if(pick.isPressed())
+				pickup.Toggle();
 
 			drivetrain.Drive(deadzone(joy.GetRawAxis(4)), deadzone(joy.GetRawAxis(1)));
 

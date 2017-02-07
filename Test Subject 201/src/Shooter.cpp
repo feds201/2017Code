@@ -23,7 +23,7 @@ Shooter::Shooter(uint8_t canid, uint8_t canid2){
 
 	slist->shoot = new DoubleSolenoid(8, 4, 5);
 
-	slist->speed = 0.5;
+	slist->speed = 0.7;
 
 }
 
