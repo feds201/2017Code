@@ -21,7 +21,7 @@ Shooter::Shooter(uint8_t canid, uint8_t canid2){
 	slist->shooter1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
 	slist->shooter2->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
 
-	slist->shoot = new DoubleSolenoid(8, 4, 5);
+	slist->shoot = new DoubleSolenoid(8, 0, 1);
 
 	slist->speed = 0.7;
 
@@ -29,12 +29,8 @@ Shooter::Shooter(uint8_t canid, uint8_t canid2){
 
 void Shooter::SpinUp(){
 
-	slist->shooter1->Set(slist->speed);
+	slist->shooter1->Set(-slist->speed);
 	slist->shooter2->Set(slist->speed);
-
-	SmartDashboard::PutNumber("Shooter 1", slist->shooter1->GetEncVel());
-	SmartDashboard::PutNumber("Shooter 2", slist->shooter2->GetEncVel());
-
 }
 
 void Shooter::UpdateSpeed(float speed){
@@ -63,3 +59,27 @@ void Shooter::Stop(){
 	slist->shoot->Set(frc::DoubleSolenoid::Value::kReverse);
 
 }
+
+float Shooter::getMotorVel(motorSide encside){
+
+	switch(encside){
+
+	case Shooter1 :
+
+		return(slist->shooter1->GetEncVel());
+
+		break;
+	case Shooter2 :
+
+		return(slist->shooter2->GetEncVel());
+
+		break;
+	default :
+
+		return 0;
+		break;
+
+	}
+
+}
+

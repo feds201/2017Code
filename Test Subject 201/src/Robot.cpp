@@ -13,7 +13,7 @@
 #include"DriveTrain.h"
 #include"GearFlipper.h"
 #include"Lifter.h"
-//#include"Pickup.h"
+#include"Pickup.h"
 #include"Shooter.h"
 
 
@@ -30,13 +30,14 @@
 
 class Robot: public frc::SampleRobot {
 	Joystick joy;
+	Joystick joy2;
 	DriveTrain drivetrain;
 	Edge shift;
 	Timer time;
 	std::shared_ptr<NetworkTable> table;
 	GearFlipper flipper;
 	Lifter lifter;
-	//Pickup pickup;
+	Pickup pickup;
 	Shooter shooter;
 	Edge flip;
 	Edge lift;
@@ -57,9 +58,9 @@ class Robot: public frc::SampleRobot {
 
 public:
 	Robot() :
-		joy(0), drivetrain(3, 4, 7, 5, 8, 2, 3), shift(joy.GetRawButton(1)), table(NetworkTable::GetTable("GRIP/myContoursReport")),
-		flipper(), lifter(0), /* pickup(6), */ shooter(1, 2), flip(joy.GetRawButton(5)), lift(joy.GetRawButton(4)), shoot(joy.GetRawButton(6)),
-		pick(joy.GetRawButton(3)), speedup(joy.GetRawButton(8)), speeddown(joy.GetRawButton(7)), SpinUp(joy.GetRawButton(2))
+		joy(0), joy2(1), drivetrain(3, 4, 7, 5, 8, 2, 3), shift(joy.GetRawButton(1)), table(NetworkTable::GetTable("GRIP/myContoursReport")),
+		flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)), shoot(joy2.GetRawButton(6)),
+		pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)), speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2))
 	{
 
 	}
@@ -224,13 +225,13 @@ float deadzone(float f)
 		while (IsOperatorControl() && IsEnabled()) {
 
 			shift.update(joy.GetRawButton(1));
-			flip.update(joy.GetRawButton(5));
-			lift.update(joy.GetRawButton(4));
-			shoot.update(joy.GetRawButton(6));
-			pick.update(joy.GetRawButton(3));
-			speedup.update(joy.GetRawButton(8));
-			speeddown.update(joy.GetRawButton(7));
-			SpinUp.update(joy.GetRawButton(2));
+			flip.update(joy2.GetRawButton(5));
+			lift.update(joy.GetRawButton(2));
+			shoot.update(joy2.GetRawButton(6));
+			pick.update(joy2.GetRawButton(3));
+			speedup.update(joy2.GetRawButton(8));
+			speeddown.update(joy2.GetRawButton(7));
+			SpinUp.update(joy2.GetRawButton(2));
 
 			if(shift.isPressed())
 				drivetrain.Shift();
@@ -271,14 +272,17 @@ float deadzone(float f)
 				shooter.UpdateSpeed(speed);
 			}
 
-
-/*
 			if(pick.isPressed())
 				pickup.Toggle();
 
-*/
 
-			drivetrain.Drive(deadzone(joy.GetRawAxis(4)), deadzone(joy.GetRawAxis(1)));
+
+			drivetrain.Drive(deadzone(joy.GetRawAxis(1)), deadzone(joy.GetRawAxis(4)));
+
+			SmartDashboard::PutNumber("LMotors", drivetrain.getMotorVel(DriveTrain::leftSide));
+			SmartDashboard::PutNumber("RMotors", drivetrain.getMotorVel(DriveTrain::rightSide));
+			SmartDashboard::PutNumber("Shooter 1", shooter.getMotorVel(Shooter::Shooter1));
+			SmartDashboard::PutNumber("Shooter 2", shooter.getMotorVel(Shooter::Shooter2));
 
 			frc::Wait(0.005);
 		}

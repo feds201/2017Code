@@ -21,6 +21,11 @@ public:
 	void Shoot();
 	void Stop();
 
+
+	enum motorSide{Shooter1, Shooter2};
+
+	float getMotorVel(motorSide encside);
+
 private:
 
 	struct shooterlist{

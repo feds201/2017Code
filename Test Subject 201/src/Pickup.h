@@ -26,7 +26,7 @@ private:
 
 		CANTalon *pickupmotor;
 
-		bool ison;
+		bool ison = false;
 
 	};
 

@@ -22,8 +22,10 @@ void Lifter::Toggle(){
 
 	if(llist->ison){
 		llist->liftermotor->Set(0);
+		llist->ison = false;
 	}else{
 		llist->liftermotor->Set(1);
+		llist->ison = true;
 	}
 
 }

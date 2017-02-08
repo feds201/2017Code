@@ -11,7 +11,7 @@ GearFlipper::GearFlipper(){
 
 	gflist = new struct gearflipperlist;
 
-	gflist->flipper = new DoubleSolenoid(8, 2, 3);
+	gflist->flipper = new DoubleSolenoid(8, 4, 5);
 
 }
 

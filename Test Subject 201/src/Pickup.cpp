@@ -12,6 +12,8 @@ Pickup::Pickup(uint8_t canid){
 
 	plist = new struct pickuplist;
 
+	plist->pickupmotor = new CANTalon(canid);
+
 	plist->pickupmotor->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 
 }
@@ -20,8 +22,10 @@ void Pickup::Toggle(){
 
 	if(plist->ison){
 		plist->pickupmotor->Set(0);
+		plist->ison = false;
 	}else{
-		plist->pickupmotor->Set(1);
+		plist->pickupmotor->Set(-1);
+		plist->ison = true;
 	}
 
 }
