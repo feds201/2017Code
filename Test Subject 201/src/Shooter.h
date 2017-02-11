@@ -20,11 +20,8 @@ public:
 	void UpdateSpeed(float speed);
 	void Shoot();
 	void Stop();
-
-
-	enum motorSide{Shooter1, Shooter2};
-
-	float getMotorVel(motorSide encside);
+	float getVel();
+	float getVel2();
 
 private:
 

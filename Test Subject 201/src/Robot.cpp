@@ -275,14 +275,16 @@ float deadzone(float f)
 			if(pick.isPressed())
 				pickup.Toggle();
 
-
+			if(ison == true){
+				SmartDashboard::PutNumber("Shooter", shooter.getVel());
+				SmartDashboard::PutNumber("Shooter 2", shooter.getVel2());
+			}
 
 			drivetrain.Drive(deadzone(joy.GetRawAxis(1)), deadzone(joy.GetRawAxis(4)));
 
 			SmartDashboard::PutNumber("LMotors", drivetrain.getMotorVel(DriveTrain::leftSide));
 			SmartDashboard::PutNumber("RMotors", drivetrain.getMotorVel(DriveTrain::rightSide));
-			SmartDashboard::PutNumber("Shooter 1", shooter.getMotorVel(Shooter::Shooter1));
-			SmartDashboard::PutNumber("Shooter 2", shooter.getMotorVel(Shooter::Shooter2));
+			SmartDashboard::PutNumber("Speed", speed*100);
 
 			frc::Wait(0.005);
 		}

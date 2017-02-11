@@ -18,8 +18,8 @@ Shooter::Shooter(uint8_t canid, uint8_t canid2){
 	slist->shooter1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 	slist->shooter2->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
 
-	slist->shooter1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
-	slist->shooter2->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
+	slist->shooter1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+	slist->shooter2->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 
 	slist->shoot = new DoubleSolenoid(8, 0, 1);
 
@@ -59,27 +59,15 @@ void Shooter::Stop(){
 	slist->shoot->Set(frc::DoubleSolenoid::Value::kReverse);
 
 }
+float Shooter::getVel(){
 
-float Shooter::getMotorVel(motorSide encside){
+	return slist->shooter1->GetEncVel();
 
-	switch(encside){
+}
 
-	case Shooter1 :
+float Shooter::getVel2(){
 
-		return(slist->shooter1->GetEncVel());
-
-		break;
-	case Shooter2 :
-
-		return(slist->shooter2->GetEncVel());
-
-		break;
-	default :
-
-		return 0;
-		break;
-
-	}
+	return slist->shooter2->GetEncVel();
 
 }
 
