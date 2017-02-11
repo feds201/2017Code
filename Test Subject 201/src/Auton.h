@@ -19,6 +19,7 @@ public:
 	Auton();
 	double Update();
 	void Drive();
+	void Routes();
 
 private:
 
@@ -26,6 +27,9 @@ private:
 			outOfView, inRangeL, inRangeR, inRange, inView, done
 		};
 
+	enum autonmode{gear, shoot, gearandshoot};
+	enum team{red, blue};
+	enum pos{left, right, center};
 
 	struct autonlist {
 
@@ -59,7 +63,24 @@ private:
 
 	};
 
+	struct switches{
+
+		DigitalInput *Pos1;
+		DigitalInput *Pos3;
+
+		DigitalInput *Red;
+
+		DigitalInput *Gear;
+		DigitalInput *GearAndShoot;
+
+		autonmode mode;
+		team Team;
+		pos poss;
+
+	};
+
 	struct autonlist *alist;
+	struct switches *switches;
 
 };
 

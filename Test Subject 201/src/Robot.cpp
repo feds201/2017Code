@@ -1,12 +1,4 @@
-#include <thread>
 #include <CameraServer.h>
-#include <IterativeRobot.h>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/core/types.hpp>
-#include <stdlib.h>
-#include <stdio.h>
-#include <timer.h>
 #include"WPILib.h"
 #include"CANTalon.h"
 #include"EdgeDetection.h"
@@ -24,7 +16,6 @@ class Robot: public frc::SampleRobot {
 	Auton auton;
 	Edge shift;
 	Timer time;
-	std::shared_ptr<NetworkTable> table;
 	GearFlipper flipper;
 	Lifter lifter;
 	Pickup pickup;
@@ -39,7 +30,7 @@ class Robot: public frc::SampleRobot {
 
 public:
 	Robot() :
-			joy(0), joy2(1), drivetrain(3, 4, 7, 5, 8, 2, 3), auton(), shift(joy.GetRawButton(1)), table(NetworkTable::GetTable("GRIP/myContoursReport")),
+			joy(0), joy2(1), drivetrain(3, 4, 7, 5, 8, 2, 3), auton(), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
 			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)) {
@@ -47,8 +38,7 @@ public:
 	}
 
 	void RobotInit() {
-		cs::UsbCamera camera =
-				CameraServer::GetInstance()->StartAutomaticCapture();
+		cs::UsbCamera camera = CameraServer::GetInstance()->StartAutomaticCapture();
 	}
 
 	void Autonomous() {

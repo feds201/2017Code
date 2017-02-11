@@ -10,6 +10,7 @@
 Auton::Auton() {
 
 	alist = new struct autonlist;
+	switches = new struct switches;
 
 	alist->table = NetworkTable::GetTable("GRIP/myContoursReport");
 	alist->drivetrain = new DriveTrain(3, 4, 7, 5, 8, 2, 3);
@@ -20,6 +21,14 @@ Auton::Auton() {
 			llvm::ArrayRef<double>());
 	alist->height = alist->table->GetNumberArray("height",
 			llvm::ArrayRef<double>());
+
+
+	switches->Gear = new DigitalInput(1);
+	switches->GearAndShoot = new DigitalInput(2);
+	switches->Pos1 = new DigitalInput(3);
+	switches->Pos3 = new DigitalInput(4);
+	switches->Red = new DigitalInput(5);
+
 
 }
 
@@ -121,4 +130,212 @@ void Auton::Drive() {
 		break;
 	}
 }
+
+void Auton::Routes(){
+
+	//Setting Auton Mode
+
+	if(switches->Gear->Get()){
+		switches->mode = gear;
+	}else if(switches->GearAndShoot->Get()){
+		switches->mode = gearandshoot;
+	}else{
+		switches->mode = shoot;
+	}
+
+	//Setting Pos
+
+	if(switches->Pos1->Get()){
+		switches->poss = left;
+	}else if(switches->Pos3->Get()){
+		switches->poss = right;
+	}else{
+		switches->poss = center;
+	}
+
+	//Setting Team
+
+	if(switches->Red->Get()){
+		switches->Team = red;
+	}else{
+		switches->Team = blue;
+	}
+
+
+	/*
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 */
+
+
+	if(switches->Team == red && switches->poss == left && switches->mode == gear){
+
+		//Turn Left Slightly
+		//Go Forward
+		//Turn 90 degrees right
+		//Go For Gear Placement
+
+	}
+
+	if(switches->Team == red && switches->poss == left && switches->mode == shoot){
+
+			//Print Error for Red, Left, Shoot
+
+	}
+
+	if(switches->Team == red && switches->poss == left && switches->mode == gearandshoot){
+
+			//Print Error for Red, Left, Gear and Shoot
+
+	}
+
+	if(switches->Team == red && switches->poss == center && switches->mode == gear){
+
+		//Go Forward
+		//Go For Gear
+
+
+	}
+
+	if(switches->Team == red && switches->poss == center && switches->mode == shoot){
+
+		//Turn Right
+		//Go Forward
+		//Shoot
+
+	}
+
+	if(switches->Team == red && switches->poss == center && switches->mode == gearandshoot){
+
+		//Do Red, Center, Gear
+		//Backup
+		//Turn Right
+		//Go Foward
+		//Shoot
+
+	}
+
+
+	if(switches->Team == red && switches->poss == right && switches->mode == gear){
+
+		//Turn Right
+		//Go Forward
+		//Turn Left 90 degrees
+		//Go For Gear
+
+	}
+
+	if(switches->Team == red && switches->poss == right && switches->mode == shoot){
+
+		//Turn Right
+		//Go Forward
+		//Shoot
+
+	}
+
+	if(switches->Team == red && switches->poss == right && switches->mode == gearandshoot){
+
+		//Do Red, Right, Gear and Shoot
+		//Backup Turn Right 90 degrees
+		//Backup
+		//Shoot
+
+	}
+
+	if(switches->Team == blue && switches->poss == left && switches->mode == gear){
+
+		//Same As Red Left Gear
+
+		//Turn Left Slightly
+		//Go Forward
+		//Turn 90 degrees right
+		//Go For Gear Placement
+
+
+	}
+
+	if(switches->Team == blue && switches->poss == left && switches->mode == shoot){
+
+		//Turn Left
+		//Go Foward
+		//Shoot
+
+	}
+
+	if(switches->Team == blue && switches->poss == left && switches->mode == gearandshoot){
+
+		//Do Blue Left Gear
+		//Backup
+		//Turn Left 90 degrees
+		//Backup
+		//Shoot
+
+	}
+
+	if(switches->Team == blue && switches->poss == center && switches->mode == gear){
+
+		//Go Foward
+		//Go For Gear
+
+
+	}
+
+	if(switches->Team == blue && switches->poss == center && switches->mode == shoot){
+
+		//Turn Left
+		//Go Forward
+		//Shoot
+
+	}
+
+	if(switches->Team == blue && switches->poss == center && switches->mode == gearandshoot){
+
+		//Do  Blue Center Gear
+		//Backup
+		//Turn Left
+		//Go Foward
+		//Shoot
+
+
+	}
+
+
+	if(switches->Team == blue && switches->poss == right && switches->mode == gear){
+
+		//Same as Red Right Gear
+
+		//Turn Right
+		//Go Forward
+		//Turn Left 90 degrees
+		//Go For Gear
+
+
+	}
+
+	if(switches->Team == blue && switches->poss == right && switches->mode == shoot){
+
+		//Print Error for Blue, Right, Shoot
+
+	}
+
+	if(switches->Team == blue && switches->poss == right && switches->mode == gearandshoot){
+
+		//Print Error for, Blue, Right, Gear And Shoot
+
+	}
+
+}
+
+
+
+
 
