@@ -15,15 +15,21 @@ Shooter::Shooter(uint8_t canid, uint8_t canid2){
 	slist->shooter1 = new CANTalon(canid);
 	slist->shooter2 = new CANTalon(canid2);
 
-	slist->shooter1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
-	slist->shooter2->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+	slist->shooter1->SetControlMode(frc::CANSpeedController::ControlMode::kVoltage);
+	slist->shooter2->SetControlMode(frc::CANSpeedController::ControlMode::kVoltage);
 
-	slist->shooter1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
-	slist->shooter2->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+	slist->shooter1->SetPID(0, .0001, 0);
+	slist->shooter2->SetPID(0, .0001, 0);
+
+	slist->shooter1->ConfigEncoderCodesPerRev(1024);
+	slist->shooter2->ConfigEncoderCodesPerRev(1024);
+
+	slist->shooter1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
+	slist->shooter2->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
 
 	slist->shoot = new DoubleSolenoid(8, 0, 1);
 
-	slist->speed = 0.7;
+	slist->speed = 8.4;
 
 }
 
