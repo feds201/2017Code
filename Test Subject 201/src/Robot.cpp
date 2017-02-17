@@ -42,10 +42,20 @@ public:
 	}
 
 	void Autonomous() {
+		int autonmode = auton.Routes();
 
-		while (IsAutonomous() && IsEnabled()) {
+		while(IsAutonomous() && IsEnabled()){
 
+		if(autonmode == 1){
+
+		}else if(autonmode == 2){
+
+
+
+		}else{
 			auton.Drive();
+		}
+
 		}
 	}
 
@@ -62,7 +72,7 @@ public:
 
 	void OperatorControl() override {
 
-		float speed = 0.7;
+		float speed = 5250;
 		bool ison = false;
 
 		while (IsOperatorControl() && IsEnabled()) {
@@ -103,12 +113,12 @@ public:
 			}
 
 			if (speedup.isPressed()) {
-				speed += 1.2;
+				speed += 525;
 				shooter.UpdateSpeed(speed);
 			}
 
 			if (speeddown.isPressed()) {
-				speed -= 1.2;
+				speed -= 525;
 				shooter.UpdateSpeed(speed);
 			}
 
@@ -120,15 +130,17 @@ public:
 			drivetrain.Drive(deadzone(joy.GetRawAxis(1)),
 					deadzone(joy.GetRawAxis(4)));
 
+			//shooter.Stir();
+
 			//Display To Dashboard
 
 			SmartDashboard::PutNumber("LMotors",
 					drivetrain.getMotorVel(DriveTrain::leftSide));
 			SmartDashboard::PutNumber("RMotors",
 					drivetrain.getMotorVel(DriveTrain::rightSide));
-			SmartDashboard::PutNumber("Speed", speed*100);
+			SmartDashboard::PutNumber("Speed", (speed*100)/10500);
 
-			SmartDashboard::PutNumber("Shooter", shooter.getVel());
+			SmartDashboard::PutNumber("Shooter", -shooter.getVel());
 							SmartDashboard::PutNumber("Shooter 2", shooter.getVel2());
 
 			frc::Wait(0.005);

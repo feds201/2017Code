@@ -19,7 +19,7 @@ public:
 	Auton();
 	double Update();
 	void Drive();
-	void Routes();
+	int Routes();
 
 private:
 
@@ -57,7 +57,7 @@ private:
 		bool iroutput;
 		double drivedist;
 
-		Timer time;
+		Timer *time;
 
 		bool done = false;
 

@@ -96,16 +96,16 @@ void Auton::Drive() {
 
 	case inRange:
 
-		alist->time.Start();
-		alist->time.Reset();
+		alist->time->Start();
+		alist->time->Reset();
 		alist->done = true;
-		while (alist->time.Get() < 4) {
+		while (alist->time->Get() < 4) {
 
 			alist->drivetrain->Drive(0, 0);
 
 		}
-		alist->time.Reset();
-		while (alist->time.Get() < 4) {
+		alist->time->Reset();
+		while (alist->time->Get() < 4) {
 
 			alist->drivetrain->Drive(0, 0.4);
 
@@ -131,13 +131,13 @@ void Auton::Drive() {
 	}
 }
 
-void Auton::Routes(){
+int Auton::Routes(){
 
 	//Setting Auton Mode
 
-	if(switches->Gear->Get()){
+	if(!switches->Gear->Get()){
 		switches->mode = gear;
-	}else if(switches->GearAndShoot->Get()){
+	}else if(!switches->GearAndShoot->Get()){
 		switches->mode = gearandshoot;
 	}else{
 		switches->mode = shoot;
@@ -145,9 +145,9 @@ void Auton::Routes(){
 
 	//Setting Pos
 
-	if(switches->Pos1->Get()){
+	if(!switches->Pos1->Get()){
 		switches->poss = left;
-	}else if(switches->Pos3->Get()){
+	}else if(!switches->Pos3->Get()){
 		switches->poss = right;
 	}else{
 		switches->poss = center;
@@ -155,7 +155,7 @@ void Auton::Routes(){
 
 	//Setting Team
 
-	if(switches->Red->Get()){
+	if(!switches->Red->Get()){
 		switches->Team = red;
 	}else{
 		switches->Team = blue;
@@ -179,10 +179,14 @@ void Auton::Routes(){
 
 	if(switches->Team == red && switches->poss == left && switches->mode == gear){
 
-		//Turn Left Slightly
 		//Go Forward
-		//Turn 90 degrees right
 		//Go For Gear Placement
+
+		alist->time->Start();
+
+		while(alist->time->Get() < 4){
+			alist->drivetrain->Drive(1, 0);
+		}
 
 	}
 
@@ -203,14 +207,26 @@ void Auton::Routes(){
 		//Go Forward
 		//Go For Gear
 
+		alist->time->Start();
+
+		while(alist->time->Get() < 1){
+			alist->drivetrain->Drive(1, 0);
+		}
+
 
 	}
 
 	if(switches->Team == red && switches->poss == center && switches->mode == shoot){
 
-		//Turn Right
 		//Go Forward
 		//Shoot
+
+		alist->time->Start();
+
+		while(alist->time->Get() < 2){
+			alist->drivetrain->Drive(1, 0);
+		}
+
 
 	}
 
@@ -218,9 +234,26 @@ void Auton::Routes(){
 
 		//Do Red, Center, Gear
 		//Backup
-		//Turn Right
-		//Go Foward
 		//Shoot
+
+		alist->time->Start();
+
+		while(alist->time->Get() < 2){
+			alist->drivetrain->Drive(1, 0);
+		}
+
+		while(!alist->done){
+			Drive();
+		}
+
+		alist->time->Reset();
+		alist->time->Start();
+
+		while(alist->time->Get() < 1){
+			alist->drivetrain->Drive(-1, 0);
+		}
+
+		alist->drivetrain->Drive(0, 0);
 
 	}
 
@@ -245,8 +278,6 @@ void Auton::Routes(){
 	if(switches->Team == red && switches->poss == right && switches->mode == gearandshoot){
 
 		//Do Red, Right, Gear and Shoot
-		//Backup Turn Right 90 degrees
-		//Backup
 		//Shoot
 
 	}
@@ -286,6 +317,7 @@ void Auton::Routes(){
 		//Go Foward
 		//Go For Gear
 
+		Drive();
 
 	}
 
@@ -331,6 +363,14 @@ void Auton::Routes(){
 
 		//Print Error for, Blue, Right, Gear And Shoot
 
+	}
+
+	if(switches->mode == shoot){
+		return 1;
+	}else if(switches->mode == gearandshoot){
+		return 2;
+	}else{
+		return 3;
 	}
 
 }

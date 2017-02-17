@@ -20,6 +20,7 @@ public:
 	void UpdateSpeed(float speed);
 	void Shoot();
 	void Stop();
+	void Stir();
 	float getVel();
 	float getVel2();
 
@@ -29,6 +30,21 @@ private:
 
 		CANTalon *shooter1;
 		CANTalon *shooter2;
+
+		VictorSP *stirer;
+
+		int input = 0;
+		double counts = 0;
+		bool lasttime = false;
+		double motorin = 0.45; //0.45
+		bool direction = false;
+		bool stopstir = false;
+
+		AnalogInput *stirenc;
+		DigitalInput *limit;
+
+		bool ison = false;
+		bool started = false;
 
 		DoubleSolenoid *shoot;
 

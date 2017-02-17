@@ -38,10 +38,10 @@ DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t 
 
 }
 
-void DriveTrain::Drive(float trn, float fwd){
+void DriveTrain::Drive(float fwd, float trn){
 
-	mlist->Lmotors = fwd - trn/2;
-	mlist->Rmotors = fwd + trn/2;
+	mlist->Lmotors = trn - fwd/2;
+	mlist->Rmotors = trn + fwd/2;
 
 	mlist->Lmotor1->Set(mlist->Lmotors);
 	mlist->Lmotor2->Set(mlist->Lmotors);
