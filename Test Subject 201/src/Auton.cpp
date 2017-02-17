@@ -22,13 +22,11 @@ Auton::Auton() {
 	alist->height = alist->table->GetNumberArray("height",
 			llvm::ArrayRef<double>());
 
-
 	switches->Gear = new DigitalInput(1);
 	switches->GearAndShoot = new DigitalInput(2);
 	switches->Pos1 = new DigitalInput(3);
 	switches->Pos3 = new DigitalInput(4);
 	switches->Red = new DigitalInput(5);
-
 
 }
 
@@ -131,36 +129,35 @@ void Auton::Drive() {
 	}
 }
 
-int Auton::Routes(){
+int Auton::Routes() {
 
 	//Setting Auton Mode
 
-	if(!switches->Gear->Get()){
+	if (!switches->Gear->Get()) {
 		switches->mode = gear;
-	}else if(!switches->GearAndShoot->Get()){
+	} else if (!switches->GearAndShoot->Get()) {
 		switches->mode = gearandshoot;
-	}else{
+	} else {
 		switches->mode = shoot;
 	}
 
 	//Setting Pos
 
-	if(!switches->Pos1->Get()){
+	if (!switches->Pos1->Get()) {
 		switches->poss = left;
-	}else if(!switches->Pos3->Get()){
+	} else if (!switches->Pos3->Get()) {
 		switches->poss = right;
-	}else{
+	} else {
 		switches->poss = center;
 	}
 
 	//Setting Team
 
-	if(!switches->Red->Get()){
+	if (!switches->Red->Get()) {
 		switches->Team = red;
-	}else{
+	} else {
 		switches->Team = blue;
 	}
-
 
 	/*
 	 *
@@ -176,61 +173,71 @@ int Auton::Routes(){
 	 *
 	 */
 
-
-	if(switches->Team == red && switches->poss == left && switches->mode == gear){
+	if (switches->Team == red && switches->poss == left
+			&& switches->mode == gear) {
 
 		//Go Forward
 		//Go For Gear Placement
 
 		alist->time->Start();
 
-		while(alist->time->Get() < 4){
+		while (alist->time->Get() < 4) {
 			alist->drivetrain->Drive(1, 0);
+		}
+		while (!alist->done) {
+			Drive();
 		}
 
 	}
 
-	if(switches->Team == red && switches->poss == left && switches->mode == shoot){
+	if (switches->Team == red && switches->poss == left
+			&& switches->mode == shoot) {
 
-			//Print Error for Red, Left, Shoot
-
-	}
-
-	if(switches->Team == red && switches->poss == left && switches->mode == gearandshoot){
-
-			//Print Error for Red, Left, Gear and Shoot
+		//Print Error for Red, Left, Shoot
 
 	}
 
-	if(switches->Team == red && switches->poss == center && switches->mode == gear){
+	if (switches->Team == red && switches->poss == left
+			&& switches->mode == gearandshoot) {
+
+		//Print Error for Red, Left, Gear and Shoot
+
+	}
+
+	if (switches->Team == red && switches->poss == center
+			&& switches->mode == gear) {
 
 		//Go Forward
 		//Go For Gear
 
 		alist->time->Start();
 
-		while(alist->time->Get() < 1){
+		while (alist->time->Get() < 1) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
+		while (!alist->done) {
+			Drive();
+		}
 
 	}
 
-	if(switches->Team == red && switches->poss == center && switches->mode == shoot){
+	if (switches->Team == red && switches->poss == center
+			&& switches->mode == shoot) {
 
 		//Go Forward
 		//Shoot
 
 		alist->time->Start();
 
-		while(alist->time->Get() < 2){
+		while (alist->time->Get() < 2) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
-
 	}
 
-	if(switches->Team == red && switches->poss == center && switches->mode == gearandshoot){
+	if (switches->Team == red && switches->poss == center
+			&& switches->mode == gearandshoot) {
 
 		//Do Red, Center, Gear
 		//Backup
@@ -238,18 +245,18 @@ int Auton::Routes(){
 
 		alist->time->Start();
 
-		while(alist->time->Get() < 2){
+		while (alist->time->Get() < 2) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
-		while(!alist->done){
+		while (!alist->done) {
 			Drive();
 		}
 
 		alist->time->Reset();
 		alist->time->Start();
 
-		while(alist->time->Get() < 1){
+		while (alist->time->Get() < 1) {
 			alist->drivetrain->Drive(-1, 0);
 		}
 
@@ -257,125 +264,226 @@ int Auton::Routes(){
 
 	}
 
+	if (switches->Team == red && switches->poss == right
+			&& switches->mode == gear) {
 
-	if(switches->Team == red && switches->poss == right && switches->mode == gear){
-
-		//Turn Right
 		//Go Forward
-		//Turn Left 90 degrees
 		//Go For Gear
+
+		alist->time->Start();
+
+		while (alist->time->Get() < 1) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
+		while (!alist->done) {
+			Drive();
+		}
 
 	}
 
-	if(switches->Team == red && switches->poss == right && switches->mode == shoot){
+	if (switches->Team == red && switches->poss == right
+			&& switches->mode == shoot) {
 
-		//Turn Right
 		//Go Forward
 		//Shoot
 
+		alist->time->Start();
+
+		while (alist->time->Get() < 2) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
 	}
 
-	if(switches->Team == red && switches->poss == right && switches->mode == gearandshoot){
+	if (switches->Team == red && switches->poss == right
+			&& switches->mode == gearandshoot) {
 
 		//Do Red, Right, Gear and Shoot
 		//Shoot
 
+		alist->time->Start();
+
+		while (alist->time->Get() < 2) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
+		while (!alist->done) {
+			Drive();
+		}
+
+		alist->time->Reset();
+		alist->time->Start();
+
+		while (alist->time->Get() < 1) {
+			alist->drivetrain->Drive(-1, 0);
+		}
+
+		alist->drivetrain->Drive(0, 0);
+
 	}
 
-	if(switches->Team == blue && switches->poss == left && switches->mode == gear){
+	if (switches->Team == blue && switches->poss == left
+			&& switches->mode == gear) {
 
-		//Same As Red Left Gear
-
-		//Turn Left Slightly
 		//Go Forward
-		//Turn 90 degrees right
 		//Go For Gear Placement
 
+		alist->time->Start();
+
+		while (alist->time->Get() < 4) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
+		while (!alist->done) {
+			Drive();
+		}
 
 	}
 
-	if(switches->Team == blue && switches->poss == left && switches->mode == shoot){
+	if (switches->Team == blue && switches->poss == left
+			&& switches->mode == shoot) {
 
-		//Turn Left
 		//Go Foward
 		//Shoot
 
+		alist->time->Start();
+
+		while (alist->time->Get() < 2) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
 	}
 
-	if(switches->Team == blue && switches->poss == left && switches->mode == gearandshoot){
+	if (switches->Team == blue && switches->poss == left
+			&& switches->mode == gearandshoot) {
 
 		//Do Blue Left Gear
 		//Backup
-		//Turn Left 90 degrees
-		//Backup
 		//Shoot
+
+		alist->time->Start();
+
+		while (alist->time->Get() < 2) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
+		while (!alist->done) {
+			Drive();
+		}
+
+		alist->time->Reset();
+		alist->time->Start();
+
+		while (alist->time->Get() < 1) {
+			alist->drivetrain->Drive(-1, 0);
+		}
+
+		alist->drivetrain->Drive(0, 0);
 
 	}
 
-	if(switches->Team == blue && switches->poss == center && switches->mode == gear){
+	if (switches->Team == blue && switches->poss == center
+			&& switches->mode == gear) {
 
 		//Go Foward
 		//Go For Gear
 
-		Drive();
+		alist->time->Start();
+
+		while (alist->time->Get() < 4) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
+		while (!alist->done) {
+			Drive();
+		}
 
 	}
 
-	if(switches->Team == blue && switches->poss == center && switches->mode == shoot){
+	if (switches->Team == blue && switches->poss == center
+			&& switches->mode == shoot) {
 
-		//Turn Left
 		//Go Forward
 		//Shoot
 
+		alist->time->Start();
+
+		while (alist->time->Get() < 2) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
 	}
 
-	if(switches->Team == blue && switches->poss == center && switches->mode == gearandshoot){
+	if (switches->Team == blue && switches->poss == center
+			&& switches->mode == gearandshoot) {
 
 		//Do  Blue Center Gear
 		//Backup
-		//Turn Left
-		//Go Foward
 		//Shoot
 
+		alist->time->Start();
+
+		while (alist->time->Get() < 2) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
+		while (!alist->done) {
+			Drive();
+		}
+
+		alist->time->Reset();
+		alist->time->Start();
+
+		while (alist->time->Get() < 1) {
+			alist->drivetrain->Drive(-1, 0);
+		}
+
+		alist->drivetrain->Drive(0, 0);
 
 	}
 
-
-	if(switches->Team == blue && switches->poss == right && switches->mode == gear){
+	if (switches->Team == blue && switches->poss == right
+			&& switches->mode == gear) {
 
 		//Same as Red Right Gear
 
-		//Turn Right
 		//Go Forward
-		//Turn Left 90 degrees
 		//Go For Gear
 
+		alist->time->Start();
+
+		while (alist->time->Get() < 4) {
+			alist->drivetrain->Drive(1, 0);
+		}
+
+		while (!alist->done) {
+			Drive();
+		}
 
 	}
 
-	if(switches->Team == blue && switches->poss == right && switches->mode == shoot){
+	if (switches->Team == blue && switches->poss == right
+			&& switches->mode == shoot) {
 
 		//Print Error for Blue, Right, Shoot
 
 	}
 
-	if(switches->Team == blue && switches->poss == right && switches->mode == gearandshoot){
+	if (switches->Team == blue && switches->poss == right
+			&& switches->mode == gearandshoot) {
 
 		//Print Error for, Blue, Right, Gear And Shoot
 
 	}
 
-	if(switches->mode == shoot){
+	if (switches->mode == shoot) {
 		return 1;
-	}else if(switches->mode == gearandshoot){
+	} else if (switches->mode == gearandshoot) {
 		return 2;
-	}else{
+	} else {
 		return 3;
 	}
 
 }
-
-
-
-
 
