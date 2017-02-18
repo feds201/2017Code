@@ -7,6 +7,7 @@
 #include"Shooter.h"
 #include"WPILib.h"
 #include"CANTalon.h"
+#include <iostream>
 
 Shooter::Shooter(uint8_t canid, uint8_t canid2){
 
@@ -15,16 +16,16 @@ Shooter::Shooter(uint8_t canid, uint8_t canid2){
 	slist->shooter1 = new CANTalon(canid);
 	slist->shooter2 = new CANTalon(canid2);
 
-	slist->stirer = new VictorSP(1);
+	slist->stirer = new VictorSP(4);
 
-	slist->stirenc = new AnalogInput(0);
-	slist->limit = new DigitalInput(0);
+	slist->stirenc = new AnalogInput(2);
+	slist->limit = new DigitalInput(9);
 
 	slist->shooter1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
 	slist->shooter2->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
 
-	slist->shooter1->SetPID(0, .00001, 0);
-	slist->shooter2->SetPID(0, .0001, 0);
+	slist->shooter1->SetPID(0.00012, .000025, 0.00001);
+	slist->shooter2->SetPID(0.00012, .000025, 0.00001);
 
 	slist->shooter1->ConfigEncoderCodesPerRev(1024);
 	slist->shooter2->ConfigEncoderCodesPerRev(1024);
@@ -32,7 +33,7 @@ Shooter::Shooter(uint8_t canid, uint8_t canid2){
 	//slist->shooter1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	//slist->shooter2->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 
-	slist->shoot = new DoubleSolenoid(8, 0, 1);
+	slist->shoot = new DoubleSolenoid(8, 4, 5);
 
 	slist->speed = 5250;
 
@@ -43,8 +44,9 @@ void Shooter::SpinUp(){
 	slist->shooter1->Set(-slist->speed);
 	slist->shooter2->Set(slist->speed);
 	slist->ison = true;
+	slist->started = false;
 
-	Stir();
+	//Stir();
 }
 
 void Shooter::UpdateSpeed(float speed){
@@ -70,35 +72,40 @@ void Shooter::Stop(){
 
 	slist->ison = false;
 
-	slist->shoot->Set(frc::DoubleSolenoid::Value::kReverse);
+	slist->shoot->Set(frc::DoubleSolenoid::Value::kForward);
 
 	slist->stirer->Set(0);
 
-	slist->started = false;
+	//slist->started = false;
 
 }
 
 void Shooter::Stir(){
 
-if(!slist->started){
+std::cout << "point a" << slist->limit->Get() << std::endl;
 
+if(!slist->started){
+	if(slist->limit->Get())
+	{
+		slist->motorin = 0;
+		slist->started = true;
+	}else{
+		slist->motorin = -0.45;
+	}
+	/*
 	slist->motorin = 0.45;
 	slist->counts = 0;
 	slist->direction = false;
 
 	if(!slist->limit){
 
-		slist->stirer->Set(-0.45);
+		slist->motorin = -0.45;
 
 	}else{
-		slist->stirer->Set(0);
 		slist->started = true;
-	}
-
+	}*/
 }else{
-
-	slist->stirer->Set(slist->motorin);
-
+	slist->motorin = .45;
 	slist->input = slist->stirenc->GetValue();
 
 	if(slist->input > 2900 && !slist->lasttime){
@@ -110,18 +117,20 @@ if(!slist->started){
 	if(!slist->direction){
 		if(slist->counts > 80){
 			slist->counts = 0;
-			slist->motorin = slist->motorin*-1;
+			slist->motorin = -.45;
 			slist->direction = true;
 	}
 	}else if(slist->limit->Get()){
 		slist->counts = 0;
-		slist->motorin = slist->motorin*-1;
+		slist->motorin = .45;
 		slist->direction = false;
 	}
 
 }
 
+slist->stirer->Set(slist->motorin);
 }
+
 
 float Shooter::getVel(){
 

@@ -21,6 +21,8 @@ public:
 
 	void Shift();
 
+	int returnGear();
+
 	enum motorSide{leftSide, rightSide};
 
 	float getMotorVel(motorSide encside);

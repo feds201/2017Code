@@ -8,6 +8,7 @@
 #include"Pickup.h"
 #include"Shooter.h"
 #include"Auton.h"
+#include"AutoAim.h"
 
 class Robot: public frc::SampleRobot {
 	Joystick joy;
@@ -27,24 +28,40 @@ class Robot: public frc::SampleRobot {
 	Edge speedup;
 	Edge speeddown;
 	Edge SpinUp;
+	Solenoid frontlight;
+	Solenoid backlight;
+	//AutoAim aim;
 
 public:
 	Robot() :
-			joy(0), joy2(1), drivetrain(3, 4, 7, 5, 8, 2, 3), auton(), shift(joy.GetRawButton(1)),
+			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
-			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)) {
+			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(8, 7), backlight(8, 6)//, aim()
+	{
+
 
 	}
 
 	void RobotInit() {
 		cs::UsbCamera camera = CameraServer::GetInstance()->StartAutomaticCapture();
+		cs::UsbCamera cam2 = CameraServer::GetInstance()->StartAutomaticCapture();
+
+		camera.SetResolution(320, 240);
+		camera.SetFPS(10);
+		camera.SetExposureManual(1);
+		cam2.SetResolution(320, 240);
+		cam2.SetFPS(10);
+		cam2.SetExposureManual(1);
 	}
 
 	void Autonomous() {
-		int autonmode = auton.Routes();
+		int autonmode = auton.Routes(this);
 
 		while(IsAutonomous() && IsEnabled()){
+
+			backlight.Set(true);
+			frontlight.Set(true);
 
 		if(autonmode == 1){
 
@@ -77,9 +94,13 @@ public:
 
 		while (IsOperatorControl() && IsEnabled()) {
 
+			backlight.Set(true);
+			frontlight.Set(true);
+
 			//Button Updates
 
 			shift.update(joy.GetRawButton(1));
+
 			flip.update(joy2.GetRawButton(5));
 			lift.update(joy.GetRawButton(2));
 			shoot.update(joy2.GetRawButton(6));
@@ -127,8 +148,11 @@ public:
 
 			//DriveTrain Controls
 
-			drivetrain.Drive(deadzone(joy.GetRawAxis(1)),
-					deadzone(joy.GetRawAxis(4)));
+			drivetrain.Drive(deadzone(joy.GetRawAxis(1)), deadzone(joy.GetRawAxis(4)));
+
+			if(ison == true){
+				shooter.Stir();
+			}
 
 			//shooter.Stir();
 
@@ -142,6 +166,9 @@ public:
 
 			SmartDashboard::PutNumber("Shooter", -shooter.getVel());
 							SmartDashboard::PutNumber("Shooter 2", shooter.getVel2());
+
+			//SmartDashboard::PutNumber("Dist From Center", aim.DistCalc());
+			//SmartDashboard::PutNumber("Dist From Target", aim.DistCalc());
 
 			frc::Wait(0.005);
 		}

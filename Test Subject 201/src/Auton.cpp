@@ -6,14 +6,15 @@
  */
 #include"WPILib.h"
 #include"Auton.h"
+#include <iostream>
 
-Auton::Auton() {
+Auton::Auton(DriveTrain* drive) {
 
 	alist = new struct autonlist;
 	switches = new struct switches;
 
 	alist->table = NetworkTable::GetTable("GRIP/myContoursReport");
-	alist->drivetrain = new DriveTrain(3, 4, 7, 5, 8, 2, 3);
+	alist->drivetrain = drive;
 
 	alist->centerX = alist->table->GetNumberArray("centerX",
 			llvm::ArrayRef<double>());
@@ -22,11 +23,11 @@ Auton::Auton() {
 	alist->height = alist->table->GetNumberArray("height",
 			llvm::ArrayRef<double>());
 
-	switches->Gear = new DigitalInput(1);
-	switches->GearAndShoot = new DigitalInput(2);
-	switches->Pos1 = new DigitalInput(3);
-	switches->Pos3 = new DigitalInput(4);
-	switches->Red = new DigitalInput(5);
+	switches->Gear = new DigitalInput(4);
+	switches->Shoot = new DigitalInput(5);
+	switches->Pos1 = new DigitalInput(2);
+	switches->Pos3 = new DigitalInput(3);
+	switches->Red = new DigitalInput(1);
 
 }
 
@@ -88,25 +89,24 @@ void Auton::Drive() {
 
 	case outOfView:
 
-		alist->drivetrain->Drive(0.4, 0);
+		alist->drivetrain->Drive(0, 0.4);
 
 		break;
 
 	case inRange:
 
-		alist->time->Start();
-		alist->time->Reset();
+		alist->time.Start();
+		alist->time.Reset();
 		alist->done = true;
-		while (alist->time->Get() < 4) {
+		while (alist->time.Get() < 4) {
 
 			alist->drivetrain->Drive(0, 0);
 
 		}
-		alist->time->Reset();
-		while (alist->time->Get() < 4) {
+		alist->time.Reset();
+		while (alist->time.Get() < 4) {
 
 			alist->drivetrain->Drive(0, 0.4);
-
 		}
 		if (done) {
 
@@ -117,29 +117,31 @@ void Auton::Drive() {
 
 	case inView:
 
-		alist->drivetrain->Drive(alist->dist, 0.3);
+		alist->drivetrain->Drive(-alist->dist, 0.3);
 
 		break;
 
 	case done:
 
 		alist->drivetrain->Drive(0, 0);
-
 		break;
 	}
 }
 
-int Auton::Routes() {
+int Auton::Routes(frc::SampleRobot *robot) {
 
 	//Setting Auton Mode
 
 	if (!switches->Gear->Get()) {
 		switches->mode = gear;
-	} else if (!switches->GearAndShoot->Get()) {
-		switches->mode = gearandshoot;
-	} else {
+	} else if (!switches->Shoot->Get()) {
 		switches->mode = shoot;
+	} else {
+		switches->mode = gearandshoot;
 	}
+
+	std::cout << "GEAR: " << switches->Gear->Get() << std::endl;
+	std::cout << "SHOOT: " << switches->Shoot->Get() << std::endl;
 
 	//Setting Pos
 
@@ -154,9 +156,9 @@ int Auton::Routes() {
 	//Setting Team
 
 	if (!switches->Red->Get()) {
-		switches->Team = red;
-	} else {
 		switches->Team = blue;
+	} else {
+		switches->Team = red;
 	}
 
 	/*
@@ -173,18 +175,23 @@ int Auton::Routes() {
 	 *
 	 */
 
+
+	std::cout << "TEAM: " << switches->Team << std::endl;
+	std::cout << "POS: " << switches->poss  << std::endl;
+	std::cout << "MODE: " << switches->mode << std::endl;
+
 	if (switches->Team == red && switches->poss == left
 			&& switches->mode == gear) {
 
 		//Go Forward
 		//Go For Gear Placement
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 4) {
+		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 
@@ -210,13 +217,13 @@ int Auton::Routes() {
 		//Go Forward
 		//Go For Gear
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 1) {
+		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 
@@ -228,9 +235,9 @@ int Auton::Routes() {
 		//Go Forward
 		//Shoot
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 2) {
+		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
@@ -243,20 +250,20 @@ int Auton::Routes() {
 		//Backup
 		//Shoot
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 2) {
+		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 
-		alist->time->Reset();
-		alist->time->Start();
+		alist->time.Reset();
+		alist->time.Start();
 
-		while (alist->time->Get() < 1) {
+		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(-1, 0);
 		}
 
@@ -270,13 +277,13 @@ int Auton::Routes() {
 		//Go Forward
 		//Go For Gear
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 1) {
+		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 
@@ -288,9 +295,9 @@ int Auton::Routes() {
 		//Go Forward
 		//Shoot
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 2) {
+		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
@@ -302,20 +309,20 @@ int Auton::Routes() {
 		//Do Red, Right, Gear and Shoot
 		//Shoot
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 2) {
+		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 
-		alist->time->Reset();
-		alist->time->Start();
+		alist->time.Reset();
+		alist->time.Start();
 
-		while (alist->time->Get() < 1) {
+		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(-1, 0);
 		}
 
@@ -329,13 +336,13 @@ int Auton::Routes() {
 		//Go Forward
 		//Go For Gear Placement
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 4) {
+		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 
@@ -347,9 +354,9 @@ int Auton::Routes() {
 		//Go Foward
 		//Shoot
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 2) {
+		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
@@ -362,20 +369,20 @@ int Auton::Routes() {
 		//Backup
 		//Shoot
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 2) {
+		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 
-		alist->time->Reset();
-		alist->time->Start();
+		alist->time.Reset();
+		alist->time.Start();
 
-		while (alist->time->Get() < 1) {
+		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(-1, 0);
 		}
 
@@ -385,17 +392,19 @@ int Auton::Routes() {
 
 	if (switches->Team == blue && switches->poss == center
 			&& switches->mode == gear) {
-
 		//Go Foward
 		//Go For Gear
 
-		alist->time->Start();
+		alist->time.Start();
+		alist->time.Reset();
 
-		while (alist->time->Get() < 4) {
-			alist->drivetrain->Drive(1, 0);
+		std::cout << alist->time.Get() << std::endl;
+		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
+			alist->drivetrain->Drive(-3, 0);
+			std::cout << "asdasdasdasd" << std::endl;
 		}
 
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 
@@ -407,9 +416,9 @@ int Auton::Routes() {
 		//Go Forward
 		//Shoot
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 2) {
+		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
@@ -422,20 +431,20 @@ int Auton::Routes() {
 		//Backup
 		//Shoot
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 2) {
+		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(1, 0);
 		}
 
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 
-		alist->time->Reset();
-		alist->time->Start();
+		alist->time.Reset();
+		alist->time.Start();
 
-		while (alist->time->Get() < 1) {
+		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(-1, 0);
 		}
 
@@ -451,13 +460,15 @@ int Auton::Routes() {
 		//Go Forward
 		//Go For Gear
 
-		alist->time->Start();
+		alist->time.Start();
 
-		while (alist->time->Get() < 4) {
-			alist->drivetrain->Drive(1, 0);
+		return 0;
+
+		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
+			alist->drivetrain->Drive(-1, 0);
 		}
 
-		while (!alist->done) {
+		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
 

@@ -16,10 +16,10 @@ class Auton {
 
 public:
 
-	Auton();
+	Auton(DriveTrain *drive);
 	double Update();
 	void Drive();
-	int Routes();
+	int Routes(frc::SampleRobot *robot);
 
 private:
 
@@ -57,7 +57,7 @@ private:
 		bool iroutput;
 		double drivedist;
 
-		Timer *time;
+		Timer time;
 
 		bool done = false;
 
@@ -71,7 +71,7 @@ private:
 		DigitalInput *Red;
 
 		DigitalInput *Gear;
-		DigitalInput *GearAndShoot;
+		DigitalInput *Shoot;
 
 		autonmode mode;
 		team Team;
