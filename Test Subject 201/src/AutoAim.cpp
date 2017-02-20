@@ -5,20 +5,19 @@
  *      Author: feds
  */
 
-/*
-
+#include"DriveTrain.h"
+#include"AutoAim.h"
 #include"WPILib.h"
 
-AutoAim::AutoAim(){
+AutoAim::AutoAim(DriveTrain* drive){
 
 	aalist = new struct autoaimlist;
 
 	aalist->table = NetworkTable::GetTable("GRIP/myContoursReport");
 
-	aalist->drivetrain = new DriveTrain(3, 4, 7, 5, 8, 2, 3);
+	aalist->drivetrain = drive;
 
-	aalist->centerX = aalist->table->GetNumberArray("centerX",
-				llvm::ArrayRef<double>());
+	aalist->centerX = aalist->table->GetNumberArray("centerX",llvm::ArrayRef<double>());
 
 	aalist->height = aalist->table->GetNumberArray("height", llvm::ArrayRef<double>());
 
@@ -27,26 +26,37 @@ AutoAim::AutoAim(){
 
 double AutoAim::MotorCalc(){
 
-	if(!aalist->centerX->empty()){
+	aalist->centerX = aalist->table->GetNumberArray("centerX",llvm::ArrayRef<double>());
+
+	aalist->height = aalist->table->GetNumberArray("height", llvm::ArrayRef<double>());
+
+
+	if(!aalist->centerX.empty()){
 				aalist->centx = aalist->centerX[0];
 				aalist->centx2 = aalist->centerX[1];
 
 				aalist->centx = (aalist->centx + aalist->centx2)/2;
 
 				aalist->centx = aalist->centx - (320/2);
+			}else{
+				aalist->centx = 0;
 			}
 
+	if(aalist->centx > 300){
+		aalist->centx = 0;
+	}
 
 
 			return aalist->centx;
-
-
-	return 0;
 }
 
 double AutoAim::DistCalc(){
 
-	if(!aalist->height->empty()){
+	aalist->centerX = aalist->table->GetNumberArray("centerX",llvm::ArrayRef<double>());
+
+	aalist->height = aalist->table->GetNumberArray("height", llvm::ArrayRef<double>());
+
+	if(!aalist->height.empty()){
 		aalist->hit = aalist->height[0];
 		aalist->hit2 = aalist->height[1];
 			}
@@ -63,10 +73,52 @@ double AutoAim::DistCalc(){
 
 
 
-void AutoAim::Aim(){
+bool AutoAim::Aim(){
 
 
+aalist->driveDist = (MotorCalc()/800);
 
+if(aalist->driveDist == 0){
+	aalist->aimstate = lost;
+}else if(MotorCalc() < 5){
+	aalist->aimstate = done;
+}else{
+	aalist->aimstate = found;
+}
+
+switch(aalist->aimstate){
+
+case lost:
+
+aalist->drivetrain->Drive(0, 0.25);
+
+	return false;
+
+break;
+
+case found:
+
+	aalist->drivetrain->Drive(0, aalist->driveDist);
+
+	return false;
+
+break;
+
+case done:
+
+	aalist->drivetrain->Drive(0, aalist->driveDist);
+
+return true;
+
+break;
+
+default:
+
+return false;
+
+break;
+
+}
 
 
 
@@ -78,5 +130,5 @@ double AutoAim::MotorSpeed(){
 	return 0;
 }
 
-*/
+
 

@@ -28,6 +28,11 @@ DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t 
 	mlist->Rmotor1 = new CANTalon(mlist->Rmotorcanid);
 	mlist->Rmotor2 = new CANTalon(mlist->Rmotor2canid);
 
+	mlist->Lmotor1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+	mlist->Lmotor2->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+	mlist->Rmotor1->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+	mlist->Rmotor2->SetControlMode(frc::CANSpeedController::ControlMode::kPercentVbus);
+
 	slist->shifter1 = new DoubleSolenoid(slist->PCMid, slist->shifterfwd, slist->shiferrev);
 
 	mlist->Lmotor1->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);

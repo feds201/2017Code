@@ -30,14 +30,14 @@ class Robot: public frc::SampleRobot {
 	Edge SpinUp;
 	Solenoid frontlight;
 	Solenoid backlight;
-	//AutoAim aim;
+	AutoAim aim;
 
 public:
 	Robot() :
 			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
-			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(8, 7), backlight(8, 6)
+			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(8, 7), backlight(8, 6), aim(&drivetrain)
 	{
 
 
@@ -56,26 +56,10 @@ public:
 	}
 
 	void Autonomous() {
-		int autonmode = auton.Routes(this);
 
-		while(IsAutonomous() && IsEnabled()){
-
-			backlight.Set(true);
-			frontlight.Set(true);
-
-		if(autonmode == 1){
-
-		}else if(autonmode == 2){
-
-
-
-		}else{
-			auton.Drive();
-		}
+		auton.Routes(this);
 
 		}
-	}
-
 	float deadzone(float f) {
 		if (fabs(f) < .15)
 			return 0.0f;
@@ -155,9 +139,14 @@ public:
 
 			if(ison == true){
 				shooter.Stir();
+				shooter.SpinUp();
 			}else{
 				shooter.returnStirToHome();
+				shooter.Stop();
 			}
+
+			if(joy2.GetRawAxis(2) > 0.7)
+				aim.Aim();
 
 			//Display To Dashboard
 
@@ -169,9 +158,6 @@ public:
 
 			SmartDashboard::PutNumber("Shooter", -shooter.getVel());
 							SmartDashboard::PutNumber("Shooter 2", shooter.getVel2());
-
-			//SmartDashboard::PutNumber("Dist From Center", aim.DistCalc());
-			//SmartDashboard::PutNumber("Dist From Target", aim.DistCalc());
 
 			frc::Wait(0.005);
 		}

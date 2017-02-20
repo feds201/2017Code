@@ -7,7 +7,7 @@
 
 #ifndef SRC_AUTOAIM_H_
 #define SRC_AUTOAIM_H_
-/*
+
 #include"WPILib.h"
 #include"DriveTrain.h"
 
@@ -15,12 +15,13 @@ class AutoAim{
 
 public:
 
-	AutoAim();
+	AutoAim(DriveTrain* drive);
 	double MotorCalc();
 	double DistCalc();
-	void Aim();
+	bool Aim();
 	double MotorSpeed();
 
+	enum state{found, lost, done};
 
 private:
 
@@ -30,9 +31,13 @@ private:
 
 		Solenoid *frontlight;
 
+		double driveDist;
+
 		std::shared_ptr<NetworkTable> table;
-		std::vector<double> *centerX;
-		std::vector<double> *height;
+		std::vector<double> centerX;
+		std::vector<double> height;
+
+		state aimstate;
 
 		double centx = 0;
 		double centx2 = 0;
@@ -45,6 +50,6 @@ private:
 	struct autoaimlist *aalist;
 };
 
-*/
+
 
 #endif /* SRC_AUTOAIM_H_ */

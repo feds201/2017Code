@@ -30,6 +30,7 @@ private:
 	enum autonmode{gear, shoot, gearandshoot};
 	enum team{red, blue};
 	enum pos{left, right, center};
+	enum dirOfRot{clockwise, counterclockwise};
 
 	struct autonlist {
 
@@ -79,6 +80,7 @@ private:
 		autonmode mode;
 		team Team;
 		pos poss;
+		dirOfRot rotDir = clockwise;
 
 	};
 
