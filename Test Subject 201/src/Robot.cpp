@@ -31,13 +31,14 @@ class Robot: public frc::SampleRobot {
 	Solenoid frontlight;
 	Solenoid backlight;
 	AutoAim aim;
+	DigitalInput ballIn;
 
 public:
 	Robot() :
 			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
-			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(8, 7), backlight(8, 6), aim(&drivetrain)
+			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(8, 7), backlight(8, 6), aim(&drivetrain), ballIn(6)
 	{
 
 
@@ -158,6 +159,8 @@ public:
 
 			SmartDashboard::PutNumber("Shooter", -shooter.getVel());
 							SmartDashboard::PutNumber("Shooter 2", shooter.getVel2());
+
+			SmartDashboard::PutBoolean("Is Ball Ready?", ballIn.Get());
 
 			frc::Wait(0.005);
 		}
