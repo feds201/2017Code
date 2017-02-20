@@ -49,6 +49,8 @@ private:
 
 		DriveTrain *drivetrain;
 
+		DigitalInput *ir;
+
 		std::vector<double> centerX;
 		std::vector<double> width;
 		std::vector<double> height;
@@ -60,6 +62,7 @@ private:
 		Timer time;
 
 		bool done = false;
+		bool found = false;
 
 	};
 

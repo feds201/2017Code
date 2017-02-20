@@ -18,7 +18,7 @@ Shooter::Shooter(uint8_t canid, uint8_t canid2){
 
 	slist->stirer = new VictorSP(4);
 
-	slist->stirenc = new AnalogInput(2);
+	slist->stirenc = new AnalogInput(0);
 	slist->limit = new DigitalInput(9);
 
 	slist->shooter1->SetControlMode(frc::CANSpeedController::ControlMode::kSpeed);
@@ -74,61 +74,60 @@ void Shooter::Stop(){
 
 	slist->shoot->Set(frc::DoubleSolenoid::Value::kForward);
 
-	slist->stirer->Set(0);
-
-	//slist->started = false;
+	slist->started = false;
 
 }
 
 void Shooter::Stir(){
 
-std::cout << "point a" << slist->limit->Get() << std::endl;
-
 if(!slist->started){
-	if(slist->limit->Get())
-	{
-		slist->motorin = 0;
+	if(slist->limit->Get()){
+		slist->motorin = 0.45;
 		slist->started = true;
+		slist->direction = false;
+
 	}else{
 		slist->motorin = -0.45;
 	}
-	/*
-	slist->motorin = 0.45;
-	slist->counts = 0;
-	slist->direction = false;
 
-	if(!slist->limit){
-
-		slist->motorin = -0.45;
-
-	}else{
-		slist->started = true;
-	}*/
 }else{
-	slist->motorin = .45;
 	slist->input = slist->stirenc->GetValue();
 
 	if(slist->input > 2900 && !slist->lasttime){
 		slist->counts++;
 		slist->lasttime = true;
+
 	}else if(slist->input < 2900){
 		slist->lasttime = false;
+
 	}
 	if(!slist->direction){
-		if(slist->counts > 80){
+
+		if(slist->counts >= 79){
 			slist->counts = 0;
-			slist->motorin = -.45;
+			slist->motorin = slist->motorin*-1;
 			slist->direction = true;
 	}
 	}else if(slist->limit->Get()){
 		slist->counts = 0;
-		slist->motorin = .45;
+		slist->motorin = slist->motorin*-1;
 		slist->direction = false;
+
 	}
 
 }
 
 slist->stirer->Set(slist->motorin);
+}
+
+
+void Shooter::returnStirToHome(){
+
+	slist->started = false;
+	slist->direction = false;
+	slist->counts = 0;
+	slist->stirer->Set(0);
+
 }
 
 

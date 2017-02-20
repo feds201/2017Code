@@ -21,6 +21,7 @@ public:
 	void Shoot();
 	void Stop();
 	void Stir();
+	void returnStirToHome();
 	float getVel();
 	float getVel2();
 

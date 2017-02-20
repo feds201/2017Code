@@ -29,11 +29,23 @@ Auton::Auton(DriveTrain* drive) {
 	switches->Pos3 = new DigitalInput(3);
 	switches->Red = new DigitalInput(1);
 
+	alist->ir = new DigitalInput(0);
+
 }
 
 double Auton::Update() {
 
+	alist->centerX = alist->table->GetNumberArray("centerX",
+		llvm::ArrayRef<double>());
+	alist->width = alist->table->GetNumberArray("width",
+		llvm::ArrayRef<double>());
+	alist->height = alist->table->GetNumberArray("height",
+		llvm::ArrayRef<double>());
+
+
+
 	if (!alist->centerX.empty()) {
+
 		alist->cenx2 = alist->centerX[1];
 		alist->cenx = alist->centerX[0];
 		alist->wid = alist->width[0];
@@ -46,23 +58,26 @@ double Auton::Update() {
 
 		alist->dist = (alist->rect1 + alist->rect2) / 2;
 
-		alist->dist = alist->dist - (320 / 2);
+		alist->dist = alist->dist - 130;
 
-		alist->distcalc1 = 2010 / alist->hit;
-		alist->distcalc2 = 2010 / alist->hit2;
+		//alist->distcalc1 = 2010 / alist->hit;
+		//alist->distcalc2 = 2010 / alist->hit2;
 
-		alist->distcalc1 = (alist->distcalc1 + alist->distcalc2) / 2;
+		//alist->distcalc1 = (alist->distcalc1 + alist->distcalc2) / 2;
 
-		SmartDashboard::PutNumber("dist", alist->distcalc1);
+		//SmartDashboard::PutNumber("dist", alist->distcalc1);
 
-	}
-	if (alist->centerX.empty())
-		alist->dist = 0;
-
-	if (alist->dist > 300)
-		alist->dist = 0;
+		}
 
 	SmartDashboard::PutNumber("Dist From Center", alist->dist);
+
+	if(alist->centerX.empty()){
+		alist->dist = 0;
+	}
+
+	if(alist->dist > 300){
+		alist->dist = 0;
+	}
 
 	return alist->dist;
 
@@ -70,12 +85,16 @@ double Auton::Update() {
 
 void Auton::Drive() {
 
-	alist->drivedist = (Update() / 800);
+	alist->drivedist = (Update()/800);
 
-	if (alist->drivedist == 0) {
+	alist->iroutput = alist->ir->Get();
+
+
+	if (alist->drivedist == 0 && alist->found == false) {
 		alist->state = outOfView;
 	} else {
 		alist->state = inView;
+		alist->found = true;
 	}
 
 	if (alist->iroutput)
@@ -89,35 +108,24 @@ void Auton::Drive() {
 
 	case outOfView:
 
-		alist->drivetrain->Drive(0, 0.4);
+		alist->drivetrain->Drive(0, -0.25);
 
 		break;
 
 	case inRange:
-
-		alist->time.Start();
-		alist->time.Reset();
 		alist->done = true;
-		while (alist->time.Get() < 4) {
+
 
 			alist->drivetrain->Drive(0, 0);
 
-		}
-		alist->time.Reset();
-		while (alist->time.Get() < 4) {
-
-			alist->drivetrain->Drive(0, 0.4);
-		}
 		if (done) {
-
 			alist->drivetrain->Drive(0, 0);
-
 		}
 		break;
 
 	case inView:
 
-		alist->drivetrain->Drive(-alist->dist, 0.3);
+		alist->drivetrain->Drive(-0.5, alist->drivedist);
 
 		break;
 
@@ -140,15 +148,13 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		switches->mode = gearandshoot;
 	}
 
-	std::cout << "GEAR: " << switches->Gear->Get() << std::endl;
-	std::cout << "SHOOT: " << switches->Shoot->Get() << std::endl;
 
 	//Setting Pos
 
 	if (!switches->Pos1->Get()) {
-		switches->poss = left;
-	} else if (!switches->Pos3->Get()) {
 		switches->poss = right;
+	} else if (!switches->Pos3->Get()) {
+		switches->poss = left;
 	} else {
 		switches->poss = center;
 	}
@@ -161,6 +167,11 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		switches->Team = red;
 	}
 
+	std::cout << switches->Team << std::endl;
+
+	std::cout << switches->poss << std::endl;
+
+	std::cout << switches->mode << std::endl;
 	/*
 	 *
 	 *
@@ -174,11 +185,6 @@ int Auton::Routes(frc::SampleRobot *robot) {
 	 *
 	 *
 	 */
-
-
-	std::cout << "TEAM: " << switches->Team << std::endl;
-	std::cout << "POS: " << switches->poss  << std::endl;
-	std::cout << "MODE: " << switches->mode << std::endl;
 
 	if (switches->Team == red && switches->poss == left
 			&& switches->mode == gear) {
@@ -336,6 +342,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		//Go Forward
 		//Go For Gear Placement
 
+		std::cout << "blue left gear" << std::endl;
+
 		alist->time.Start();
 
 		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
@@ -392,16 +400,18 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 	if (switches->Team == blue && switches->poss == center
 			&& switches->mode == gear) {
+
+		std::cout << "Blue Center Gear" << std::endl;
+
 		//Go Foward
 		//Go For Gear
 
 		alist->time.Start();
-		alist->time.Reset();
+		alist->time.
+		Reset();
 
-		std::cout << alist->time.Get() << std::endl;
-		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(-3, 0);
-			std::cout << "asdasdasdasd" << std::endl;
+		while (alist->time.Get() < 3 && robot->IsEnabled() && robot->IsAutonomous()) {
+			alist->drivetrain->Drive(-0.7, 0);
 		}
 
 		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
@@ -455,6 +465,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 	if (switches->Team == blue && switches->poss == right
 			&& switches->mode == gear) {
 
+		std::cout << "Blue Right Gear" << std::endl;
+
 		//Same as Red Right Gear
 
 		//Go Forward
@@ -462,10 +474,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		alist->time.Start();
 
-		return 0;
-
 		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(-1, 0);
+			alist->drivetrain->Drive(-0.7, 0);
 		}
 
 		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
@@ -483,6 +493,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 	if (switches->Team == blue && switches->poss == right
 			&& switches->mode == gearandshoot) {
+
+		std::cout << "blue right gear and shoot" << std::endl;
 
 		//Print Error for, Blue, Right, Gear And Shoot
 

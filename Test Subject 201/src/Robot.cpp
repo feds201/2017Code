@@ -37,7 +37,7 @@ public:
 			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
-			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(8, 7), backlight(8, 6)//, aim()
+			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(8, 7), backlight(8, 6)
 	{
 
 
@@ -91,6 +91,9 @@ public:
 
 		float speed = 5250;
 		bool ison = false;
+
+		shooter.returnStirToHome();
+		shooter.Stop();
 
 		while (IsOperatorControl() && IsEnabled()) {
 
@@ -152,9 +155,9 @@ public:
 
 			if(ison == true){
 				shooter.Stir();
+			}else{
+				shooter.returnStirToHome();
 			}
-
-			//shooter.Stir();
 
 			//Display To Dashboard
 
