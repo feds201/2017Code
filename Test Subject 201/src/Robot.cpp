@@ -32,31 +32,37 @@ class Robot: public frc::SampleRobot {
 	Solenoid backlight;
 	AutoAim aim;
 	DigitalInput ballIn;
+	cs::UsbCamera camera;
+	cs::UsbCamera cam2;
 
 public:
 	Robot() :
 			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
-			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(8, 7), backlight(8, 6), aim(&drivetrain), ballIn(6)
+			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(9, 0), backlight(9, 1), aim(&drivetrain), ballIn(6)
 	{
 
 
 	}
 
 	void RobotInit() {
-		cs::UsbCamera camera = CameraServer::GetInstance()->StartAutomaticCapture();
-		cs::UsbCamera cam2 = CameraServer::GetInstance()->StartAutomaticCapture();
+		camera = CameraServer::GetInstance()->StartAutomaticCapture();
+		cam2 = CameraServer::GetInstance()->StartAutomaticCapture();
 
-		camera.SetResolution(320, 240);
+		//camera.SetResolution(854, 480);
 		camera.SetFPS(10);
-		camera.SetExposureManual(1);
-		cam2.SetResolution(320, 240);
+		cam2.SetResolution(1280, 720);
 		cam2.SetFPS(10);
-		cam2.SetExposureManual(1);
 	}
 
 	void Autonomous() {
+
+		camera.SetExposureManual(1);
+		cam2.SetExposureManual(1);
+
+		backlight.Set(true);
+		frontlight.Set(true);
 
 		auton.Routes(this);
 
@@ -76,6 +82,9 @@ public:
 
 		float speed = 5250;
 		bool ison = false;
+
+		camera.SetExposureManual(20);
+		cam2.SetExposureManual(0.2);
 
 		shooter.returnStirToHome();
 		shooter.Stop();
@@ -122,12 +131,12 @@ public:
 			}
 
 			if (speedup.isPressed()) {
-				speed += 525;
+				speed += 105;
 				shooter.UpdateSpeed(speed);
 			}
 
 			if (speeddown.isPressed()) {
-				speed -= 525;
+				speed -= 105;
 				shooter.UpdateSpeed(speed);
 			}
 
@@ -136,14 +145,13 @@ public:
 
 			//DriveTrain Controls
 
-			drivetrain.Drive(deadzone(joy.GetRawAxis(1)), deadzone(joy.GetRawAxis(4)));
+			drivetrain.Drive(deadzone(joy.GetRawAxis(1)), deadzone(joy.GetRawAxis(4))/2);
 
 			if(ison == true){
 				shooter.Stir();
 				shooter.SpinUp();
 			}else{
 				shooter.returnStirToHome();
-				shooter.Stop();
 			}
 
 			if(joy2.GetRawAxis(2) > 0.7)
@@ -161,6 +169,8 @@ public:
 							SmartDashboard::PutNumber("Shooter 2", shooter.getVel2());
 
 			SmartDashboard::PutBoolean("Is Ball Ready?", ballIn.Get());
+
+			SmartDashboard::PutNumber("Dist From Target", aim.DistCalc());
 
 			frc::Wait(0.005);
 		}

@@ -503,7 +503,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		alist->time.Start();
 
-		while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
+		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(-0.7, 0);
 		}
 

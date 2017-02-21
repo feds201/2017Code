@@ -61,10 +61,10 @@ void DriveTrain::Shift(){
 
 	if(slist->shifter1->Get() == frc::DoubleSolenoid::Value::kForward){
 		slist->shifter1->Set(frc::DoubleSolenoid::Value::kReverse);
-		SmartDashboard::PutNumber("Gear", 1);
+		SmartDashboard::PutNumber("Gear", 2);
 	}else{
 		slist->shifter1->Set(frc::DoubleSolenoid::Value::kForward);
-		SmartDashboard::PutNumber("Gear", 2);
+		SmartDashboard::PutNumber("Gear", 1);
 	}
 
 }

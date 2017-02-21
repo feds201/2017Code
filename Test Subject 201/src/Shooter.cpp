@@ -44,7 +44,6 @@ void Shooter::SpinUp(){
 	slist->shooter1->Set(-slist->speed);
 	slist->shooter2->Set(slist->speed);
 	slist->ison = true;
-	slist->started = false;
 
 	//Stir();
 }
@@ -82,12 +81,12 @@ void Shooter::Stir(){
 
 if(!slist->started){
 	if(slist->limit->Get()){
-		slist->motorin = 0.45;
+		slist->motorin = 0.7;
 		slist->started = true;
 		slist->direction = false;
 
 	}else{
-		slist->motorin = -0.45;
+		slist->motorin = -0.7;
 	}
 
 }else{
@@ -103,7 +102,7 @@ if(!slist->started){
 	}
 	if(!slist->direction){
 
-		if(slist->counts >= 79){
+		if(slist->counts >= 70){
 			slist->counts = 0;
 			slist->motorin = slist->motorin*-1;
 			slist->direction = true;

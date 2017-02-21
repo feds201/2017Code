@@ -26,9 +26,9 @@ AutoAim::AutoAim(DriveTrain* drive){
 
 double AutoAim::MotorCalc(){
 
-	aalist->centerX = aalist->table->GetNumberArray("centerX",llvm::ArrayRef<double>());
+	aalist->centerX = aalist->table->GetNumberArray("centerY",llvm::ArrayRef<double>());
 
-	aalist->height = aalist->table->GetNumberArray("height", llvm::ArrayRef<double>());
+	aalist->height = aalist->table->GetNumberArray("width", llvm::ArrayRef<double>());
 
 
 	if(!aalist->centerX.empty()){
@@ -54,7 +54,7 @@ double AutoAim::DistCalc(){
 
 	aalist->centerX = aalist->table->GetNumberArray("centerX",llvm::ArrayRef<double>());
 
-	aalist->height = aalist->table->GetNumberArray("height", llvm::ArrayRef<double>());
+	aalist->height = aalist->table->GetNumberArray("width", llvm::ArrayRef<double>());
 
 	if(!aalist->height.empty()){
 		aalist->hit = aalist->height[0];
@@ -65,7 +65,7 @@ double AutoAim::DistCalc(){
 				aalist->hit = aalist->hit2;
 			}
 
-			aalist->dist = 1414/aalist->hit; //was 1315
+			aalist->dist = 5781/aalist->hit; //was 1315
 
 			return aalist->dist;
 
