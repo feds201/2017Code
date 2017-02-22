@@ -28,19 +28,22 @@ class Robot: public frc::SampleRobot {
 	Edge speedup;
 	Edge speeddown;
 	Edge SpinUp;
+	Edge light;
 	Solenoid frontlight;
 	Solenoid backlight;
 	AutoAim aim;
 	DigitalInput ballIn;
+	AnalogInput pressure;
 	cs::UsbCamera camera;
 	cs::UsbCamera cam2;
 
 public:
 	Robot() :
-			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain), shift(joy.GetRawButton(1)),
+			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain, &aim, &shooter), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
-			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), frontlight(9, 0), backlight(9, 1), aim(&drivetrain), ballIn(6)
+			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), light(joy2.GetRawButton(9)),
+			frontlight(9, 0), backlight(9, 1), aim(&drivetrain), ballIn(6), pressure(1), camera(), cam2()
 	{
 
 
@@ -50,9 +53,10 @@ public:
 		camera = CameraServer::GetInstance()->StartAutomaticCapture();
 		cam2 = CameraServer::GetInstance()->StartAutomaticCapture();
 
-		//camera.SetResolution(854, 480);
 		camera.SetFPS(10);
-		cam2.SetResolution(1280, 720);
+		cam2.SetResolution(480, 320);
+		camera.SetResolution(1280, 720);
+		camera.SetExposureManual(1);
 		cam2.SetFPS(10);
 	}
 
@@ -80,19 +84,19 @@ public:
 
 	void OperatorControl() override {
 
-		float speed = 5250;
+		float speed = 3360;
 		bool ison = false;
+		bool lightstat = false;
 
-		camera.SetExposureManual(20);
-		cam2.SetExposureManual(0.2);
+		camera.SetExposureManual(1);
+		cam2.SetExposureAuto();
 
 		shooter.returnStirToHome();
 		shooter.Stop();
 
 		while (IsOperatorControl() && IsEnabled()) {
 
-			backlight.Set(true);
-			frontlight.Set(true);
+			backlight.Set(false);
 
 			//Button Updates
 
@@ -105,8 +109,16 @@ public:
 			speedup.update(joy2.GetRawButton(8));
 			speeddown.update(joy2.GetRawButton(7));
 			SpinUp.update(joy2.GetRawButton(2));
+			light.update(joy2.GetRawButton(9));
 
 			//Execution Of Robot Functions Based On Controller Input
+
+			if(light.isPressed()){
+				if(lightstat == false)
+					lightstat = true;
+				else
+					lightstat = false;
+			}
 
 			if (shift.isPressed())
 				drivetrain.Shift();
@@ -157,6 +169,15 @@ public:
 			if(joy2.GetRawAxis(2) > 0.7)
 				aim.Aim();
 
+			frontlight.Set(lightstat);
+
+			if(ballIn.Get() && ison){
+				joy2.SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 1);
+			}else{
+				joy2.SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 0);
+			}
+
+
 			//Display To Dashboard
 
 			SmartDashboard::PutNumber("LMotors",
@@ -171,6 +192,8 @@ public:
 			SmartDashboard::PutBoolean("Is Ball Ready?", ballIn.Get());
 
 			SmartDashboard::PutNumber("Dist From Target", aim.DistCalc());
+
+			SmartDashboard::PutNumber("Pressure", (3631/pressure.GetValue())*100);
 
 			frc::Wait(0.005);
 		}

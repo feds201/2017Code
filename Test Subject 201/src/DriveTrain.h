@@ -27,6 +27,8 @@ public:
 
 	float getMotorVel(motorSide encside);
 
+	double getAmps();
+
 
 
 private:

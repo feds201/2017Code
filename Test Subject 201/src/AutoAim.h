@@ -34,13 +34,13 @@ private:
 		double driveDist;
 
 		std::shared_ptr<NetworkTable> table;
-		std::vector<double> centerX;
-		std::vector<double> height;
+		std::vector<double> centerY;
+		std::vector<double> Width;
 
 		state aimstate;
 
-		double centx = 0;
-		double centx2 = 0;
+		double centy = 0;
+		double centy2 = 0;
 
 		double hit = 0;
 		double hit2 = 0;

@@ -17,55 +17,52 @@ AutoAim::AutoAim(DriveTrain* drive){
 
 	aalist->drivetrain = drive;
 
-	aalist->centerX = aalist->table->GetNumberArray("centerX",llvm::ArrayRef<double>());
+	aalist->centerY = aalist->table->GetNumberArray("centerY",llvm::ArrayRef<double>());
 
-	aalist->height = aalist->table->GetNumberArray("height", llvm::ArrayRef<double>());
+	aalist->Width = aalist->table->GetNumberArray("width", llvm::ArrayRef<double>());
 
 }
 
 
 double AutoAim::MotorCalc(){
 
-	aalist->centerX = aalist->table->GetNumberArray("centerY",llvm::ArrayRef<double>());
+	aalist->centerY = aalist->table->GetNumberArray("centerY",llvm::ArrayRef<double>());
 
-	aalist->height = aalist->table->GetNumberArray("width", llvm::ArrayRef<double>());
+	aalist->Width = aalist->table->GetNumberArray("width", llvm::ArrayRef<double>());
 
 
-	if(!aalist->centerX.empty()){
-				aalist->centx = aalist->centerX[0];
-				aalist->centx2 = aalist->centerX[1];
+	if(!aalist->centerY.empty()){
+				aalist->centy = aalist->centerY[0];
 
-				aalist->centx = (aalist->centx + aalist->centx2)/2;
-
-				aalist->centx = aalist->centx - (320/2);
+				aalist->centy = aalist->centy - (720/2);
 			}else{
-				aalist->centx = 0;
+				aalist->centy = 0;
 			}
 
-	if(aalist->centx > 300){
-		aalist->centx = 0;
+	if(aalist->centy > 300){
+		aalist->centy = 0;
 	}
 
 
-			return aalist->centx;
+			return aalist->centy;
 }
 
 double AutoAim::DistCalc(){
 
-	aalist->centerX = aalist->table->GetNumberArray("centerX",llvm::ArrayRef<double>());
+	aalist->centerY = aalist->table->GetNumberArray("centerY",llvm::ArrayRef<double>());
 
-	aalist->height = aalist->table->GetNumberArray("width", llvm::ArrayRef<double>());
+	aalist->Width = aalist->table->GetNumberArray("width", llvm::ArrayRef<double>());
 
-	if(!aalist->height.empty()){
-		aalist->hit = aalist->height[0];
-		aalist->hit2 = aalist->height[1];
+	if(!aalist->Width.empty()){
+		aalist->hit = aalist->Width[0];
+		aalist->hit2 = aalist->Width[1];
 			}
 
 			if(aalist->hit2 > aalist->hit){
 				aalist->hit = aalist->hit2;
 			}
 
-			aalist->dist = 5781/aalist->hit; //was 1315
+			aalist->dist = 5610.5/aalist->hit; //was 1315
 
 			return aalist->dist;
 
@@ -76,11 +73,11 @@ double AutoAim::DistCalc(){
 bool AutoAim::Aim(){
 
 
-aalist->driveDist = (MotorCalc()/800);
+aalist->driveDist = (MotorCalc()/1000); //was 800
 
 if(aalist->driveDist == 0){
 	aalist->aimstate = lost;
-}else if(MotorCalc() < 5){
+}else if(MotorCalc() < 10){
 	aalist->aimstate = done;
 }else{
 	aalist->aimstate = found;

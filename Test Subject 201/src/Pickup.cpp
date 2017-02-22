@@ -24,7 +24,7 @@ void Pickup::Toggle(){
 		plist->pickupmotor->Set(0);
 		plist->ison = false;
 	}else{
-		plist->pickupmotor->Set(-1);
+		plist->pickupmotor->Set(-0.6);
 		plist->ison = true;
 	}
 

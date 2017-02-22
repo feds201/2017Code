@@ -91,3 +91,10 @@ float DriveTrain::getMotorVel(motorSide encside){
 	}
 
 }
+
+double DriveTrain::getAmps(){
+
+	return mlist->Lmotor1->GetOutputCurrent()+mlist->Lmotor2->GetOutputCurrent()+mlist->Rmotor1->GetOutputCurrent()+mlist->Rmotor2->GetOutputCurrent();
+
+}
+

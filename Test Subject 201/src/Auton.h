@@ -11,17 +11,22 @@
 #include"WPILib.h"
 #include"Drivetrain.h"
 #include"Timer.h"
+#include"AutoAim.h"
+#include"Shooter.h"
 
 class Auton {
 
 public:
 
-	Auton(DriveTrain *drive);
+	Auton(DriveTrain *drive, AutoAim *aim, Shooter *shoot);
 	double Update();
+	void ShootLow();
 	void Drive();
 	int Routes(frc::SampleRobot *robot);
 
 private:
+
+	enum aimstate{found, lost, atGoal};
 
 	enum autonstate {
 			outOfView, inRangeL, inRangeR, inRange, inView, done
@@ -50,11 +55,20 @@ private:
 
 		DriveTrain *drivetrain;
 
+		Shooter *shooter;
+
+		bool shooterpos = false;
+
 		DigitalInput *ir;
+
+		AutoAim *aim;
 
 		std::vector<double> centerX;
 		std::vector<double> width;
 		std::vector<double> height;
+
+		aimstate aimState;
+
 
 		int state;
 		bool iroutput;

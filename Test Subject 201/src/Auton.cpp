@@ -8,13 +8,15 @@
 #include"Auton.h"
 #include <iostream>
 
-Auton::Auton(DriveTrain* drive) {
+Auton::Auton(DriveTrain* drive, AutoAim *aim, Shooter *shoot) {
 
 	alist = new struct autonlist;
 	switches = new struct switches;
 
 	alist->table = NetworkTable::GetTable("GRIP/myContoursReport");
 	alist->drivetrain = drive;
+	alist->aim = aim;
+	alist->shooter = shoot;
 
 	alist->centerX = alist->table->GetNumberArray("centerX",
 			llvm::ArrayRef<double>());
@@ -145,6 +147,66 @@ void Auton::Drive() {
 	}
 }
 
+void Auton::ShootLow(){
+
+	alist->drivedist = (alist->aim->MotorCalc()/1000); //was 800
+
+	if(alist->drivedist == 0){
+		alist->aimState = lost;
+	}else{
+		alist->aimState = found;
+	}
+	if(alist->drivetrain->getAmps() > 80)
+		alist->aimState = atGoal;
+
+	switch(alist->aimState){
+
+	case lost:
+
+	alist->drivetrain->Drive(0, 0.25);
+
+	break;
+
+	case found:
+
+		alist->drivetrain->Drive(0.4, alist->drivedist);
+
+	break;
+
+	case atGoal:
+
+	alist->shooter->Stir();
+
+	alist->drivetrain->Drive(0, 0);
+
+	alist->time.Start();
+
+	alist->shooter->SpinUp();
+	alist->shooter->UpdateSpeed(1050);
+
+	if(alist->time.Get() > 2 && alist->shooterpos == false){
+		alist->shooter->Shoot();
+		alist->shooterpos = true;
+		alist->time.Reset();
+	}else if(alist->time.Get() > 0.5 && alist->shooterpos == true){
+
+		alist->shooter->Shoot();
+
+	}
+
+	break;
+
+	default:
+
+	break;
+
+	}
+
+
+
+	}
+
+
 int Auton::Routes(frc::SampleRobot *robot) {
 
 	//Setting Auton Mode
@@ -202,6 +264,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 	 * Red Center Gear
 	 * Blue Right Gear
 	 * Red Left Gear
+	 *
+	 * All Others Done But Not Tested
 	 */
 
 
@@ -215,7 +279,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->time.Start();
 
-				while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
+				while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
 					alist->drivetrain->Drive(-0.7, 0);
 				}
 
@@ -270,7 +334,11 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		alist->time.Start();
 
 		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(1, 0);
+			alist->drivetrain->Drive(0.7, 0);
+		}
+
+		while(robot->IsEnabled() && robot->IsAutonomous()){
+			ShootLow();
 		}
 
 	}
@@ -283,9 +351,10 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		//Shoot
 
 		alist->time.Start();
+		alist->time.Reset();
 
 		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(1, 0);
+			alist->drivetrain->Drive(-0.7, 0);
 		}
 
 		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
@@ -293,13 +362,14 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		}
 
 		alist->time.Reset();
-		alist->time.Start();
 
-		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(-1, 0);
+		while(alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()){
+			alist->drivetrain->Drive(-0.5, 0);
 		}
 
-		alist->drivetrain->Drive(0, 0);
+		while(robot->IsEnabled() && robot->IsAutonomous()){
+			ShootLow();
+		}
 
 	}
 
@@ -313,7 +383,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->time.Start();
 
-				while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
+				while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
 					alist->drivetrain->Drive(-0.7, 0);
 				}
 
@@ -332,8 +402,12 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		alist->time.Start();
 
-		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(1, 0);
+		while (alist->time.Get() < 3 && robot->IsEnabled() && robot->IsAutonomous()) {
+					alist->drivetrain->Drive(0.7, 0);
+		}
+
+		while(robot->IsEnabled() && robot->IsAutonomous()){
+			ShootLow();
 		}
 
 	}
@@ -345,23 +419,25 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		//Shoot
 
 		alist->time.Start();
+				alist->time.Reset();
 
-		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(1, 0);
-		}
+				while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
+					alist->drivetrain->Drive(-0.7, 0);
+				}
 
-		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
-			Drive();
-		}
+				while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
+					Drive();
+				}
 
-		alist->time.Reset();
-		alist->time.Start();
+				alist->time.Reset();
 
-		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(-1, 0);
-		}
+				while(alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()){
+					alist->drivetrain->Drive(-0.5, 0);
+				}
 
-		alist->drivetrain->Drive(0, 0);
+				while(robot->IsEnabled() && robot->IsAutonomous()){
+					ShootLow();
+				}
 
 	}
 
@@ -375,7 +451,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->time.Start();
 
-				while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
+				while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
 					alist->drivetrain->Drive(-0.7, 0);
 				}
 
@@ -393,10 +469,13 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		alist->time.Start();
 
-		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(1, 0);
-		}
+				while (alist->time.Get() < 3 && robot->IsEnabled() && robot->IsAutonomous()) {
+							alist->drivetrain->Drive(0.7, 0);
+				}
 
+				while(robot->IsEnabled() && robot->IsAutonomous()){
+					ShootLow();
+				}
 	}
 
 	if (switches->Team == blue && switches->poss == left
@@ -407,23 +486,26 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		//Shoot
 
 		alist->time.Start();
+						alist->time.Reset();
 
-		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(1, 0);
-		}
+						while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
+							alist->drivetrain->Drive(-0.7, 0);
+						}
 
-		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
-			Drive();
-		}
+						while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
+							Drive();
+						}
 
-		alist->time.Reset();
-		alist->time.Start();
+						alist->time.Reset();
 
-		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(-1, 0);
-		}
+						while(alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()){
+							alist->drivetrain->Drive(-0.5, 0);
+						}
 
-		alist->drivetrain->Drive(0, 0);
+						while(robot->IsEnabled() && robot->IsAutonomous()){
+							ShootLow();
+						}
+
 
 	}
 
@@ -457,10 +539,13 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		alist->time.Start();
 
-		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(1, 0);
-		}
+						while (alist->time.Get() < 3 && robot->IsEnabled() && robot->IsAutonomous()) {
+									alist->drivetrain->Drive(0.7, 0);
+						}
 
+						while(robot->IsEnabled() && robot->IsAutonomous()){
+							ShootLow();
+						}
 	}
 
 	if (switches->Team == blue && switches->poss == center
@@ -471,23 +556,25 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		//Shoot
 
 		alist->time.Start();
+								alist->time.Reset();
 
-		while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(1, 0);
-		}
+								while (alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()) {
+									alist->drivetrain->Drive(-0.7, 0);
+								}
 
-		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
-			Drive();
-		}
+								while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
+									Drive();
+								}
 
-		alist->time.Reset();
-		alist->time.Start();
+								alist->time.Reset();
 
-		while (alist->time.Get() < 1 && robot->IsEnabled() && robot->IsAutonomous()) {
-			alist->drivetrain->Drive(-1, 0);
-		}
+								while(alist->time.Get() < 2 && robot->IsEnabled() && robot->IsAutonomous()){
+									alist->drivetrain->Drive(-0.5, 0);
+								}
 
-		alist->drivetrain->Drive(0, 0);
+								while(robot->IsEnabled() && robot->IsAutonomous()){
+									ShootLow();
+								}
 
 	}
 
