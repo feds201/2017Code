@@ -182,7 +182,7 @@ void Auton::ShootLow(){
 	alist->time.Start();
 
 	alist->shooter->SpinUp();
-	alist->shooter->UpdateSpeed(1050);
+	alist->shooter->UpdateSpeed(Shooter::lowGoal);
 
 	if(alist->time.Get() > 2 && alist->shooterpos == false){
 		alist->shooter->Shoot();

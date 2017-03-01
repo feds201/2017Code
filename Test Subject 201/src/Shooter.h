@@ -15,8 +15,11 @@ class Shooter{
 
 public:
 
+
+
 	Shooter(uint8_t canid, uint8_t canid2);
 	void SpinUp();
+	enum shooterSpeed{lowGoal, low, med, high};
 	void UpdateSpeed(float speed);
 	void Shoot();
 	void Stop();
@@ -48,6 +51,8 @@ private:
 		bool started = false;
 
 		DoubleSolenoid *shoot;
+
+		shooterSpeed spd;
 
 		float speed;
 

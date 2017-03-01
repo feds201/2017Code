@@ -38,6 +38,7 @@ class Robot: public frc::SampleRobot {
 	cs::UsbCamera cam2;
 
 public:
+
 	Robot() :
 			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain, &aim, &shooter), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
@@ -87,6 +88,8 @@ public:
 		float speed = 3360;
 		bool ison = false;
 		bool lightstat = false;
+
+		Shooter::shooterSpeed spd = Shooter::lowGoal;
 
 		camera.SetExposureManual(1);
 		cam2.SetExposureAuto();
