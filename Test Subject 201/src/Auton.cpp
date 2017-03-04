@@ -201,11 +201,10 @@ void Auton::ShootLow(){
 	alist->shooter->SpinUp();
 	alist->shooter->UpdateSpeed(1050);
 
-	if(alist->time.Get() > 2 && alist->shooterpos == false){
+	if(alist->time.Get() > 2){
 		alist->shooter->Shoot();
 		alist->shooterpos = true;
 		alist->time.Reset();
-
 	}
 
 	break;
