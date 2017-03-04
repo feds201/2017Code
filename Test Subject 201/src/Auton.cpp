@@ -151,31 +151,46 @@ void Auton::Drive() {
 
 void Auton::ShootLow(){
 
-	alist->drivedist = (alist->aim->MotorCalc()/1000); //was 800
+	SmartDashboard::PutNumber("AMPS", alist->drivetrain->getAmps());
 
-	if(alist->drivedist == 0){
-		alist->aimState = lost;
-	}else{
+	if(alist->drivetrain->getAmps() > 5)
+		alist->aimState = ag;
+	else
 		alist->aimState = found;
-	}
-	if(alist->drivetrain->getAmps() > 80)
+
+	if(alist->ongoal){
 		alist->aimState = atGoal;
+	}
 
 	switch(alist->aimState){
 
-	case lost:
+	case found:
 
-	alist->drivetrain->Drive(0, 0.25);
+		alist->shooter->returnStirToHome();
+
+		alist->drivetrain->Drive(0.4, 0);
 
 	break;
 
-	case found:
+	case ag:
 
-		alist->drivetrain->Drive(0.4, alist->drivedist);
+		std::cout << "turning at goal" << std::endl;
+		alist->time.Reset();
+		alist->time.Start();
+		while(alist->time.Get() < 1){
+		alist->drivetrain->Drive(0.5, -0.3);
+		alist->ongoal = true;
+		}
+		alist->drivetrain->Drive(0, 0);
+		alist->time.Reset();
 
 	break;
 
 	case atGoal:
+
+		std::cout << "at goal" << std::endl;
+
+	std::cout << "out of at goal" << std::endl;
 
 	alist->shooter->Stir();
 
@@ -184,15 +199,12 @@ void Auton::ShootLow(){
 	alist->time.Start();
 
 	alist->shooter->SpinUp();
-	alist->shooter->UpdateSpeed(Shooter::lowGoal);
+	alist->shooter->UpdateSpeed(1050);
 
 	if(alist->time.Get() > 2 && alist->shooterpos == false){
 		alist->shooter->Shoot();
 		alist->shooterpos = true;
 		alist->time.Reset();
-	}else if(alist->time.Get() > 0.5 && alist->shooterpos == true){
-
-		alist->shooter->Shoot();
 
 	}
 

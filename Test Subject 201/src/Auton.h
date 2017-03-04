@@ -26,7 +26,7 @@ public:
 
 private:
 
-	enum aimstate{found, lost, atGoal};
+	enum aimstate{found, lost, atGoal, ag};
 
 	enum autonstate {
 			outOfView, inRangeL, inRangeR, inRange, inView, done
@@ -76,6 +76,8 @@ private:
 
 		Timer time;
 
+
+		bool ongoal = false;
 		bool done = false;
 		bool found = false;
 

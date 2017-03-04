@@ -89,6 +89,7 @@ public:
 		float speed = 3360;
 		bool ison = false;
 		bool lightstat = false;
+		bool shooterstat = false;
 
 		camera.SetExposureAuto();
 		cam2.SetExposureAuto();
@@ -98,7 +99,7 @@ public:
 
 		while (IsOperatorControl() && IsEnabled()) {
 
-			backlight.Set(false);
+			frontlight.Set(false);
 
 			//Button Updates
 
@@ -136,8 +137,13 @@ public:
 			if (lift.isPressed())
 				lifter.Toggle();
 
-			if (shoot.isPressed())
+			if (shoot.isPressed()){
 				shooter.Shoot();
+				if(shooterstat == false)
+				shooterstat = true;
+				else
+				shooterstat = false;
+			}
 
 			if (SpinUp.isPressed()) {
 				if (ison == false) {
@@ -167,12 +173,14 @@ public:
 			drivetrain.Drive(deadzone(joy.GetRawAxis(1)), deadzone(joy.GetRawAxis(4))/2);
 
 			if(ison == true){
-				shooter.Stir();
 				shooter.SpinUp();
+			}
+
+			if(ison && !shooterstat){
+				shooter.Stir();
 			}else{
 				shooter.returnStirToHome();
 			}
-
 			if(joy2.GetRawAxis(2) > 0.7)
 				aim.Aim();
 
