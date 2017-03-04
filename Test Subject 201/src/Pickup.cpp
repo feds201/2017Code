@@ -18,13 +18,13 @@ Pickup::Pickup(uint8_t canid){
 
 }
 
-void Pickup::Toggle(){
+void Pickup::Toggle(float speed){
 
 	if(plist->ison){
 		plist->pickupmotor->Set(0);
 		plist->ison = false;
 	}else{
-		plist->pickupmotor->Set(-0.6);
+		plist->pickupmotor->Set(speed);
 		plist->ison = true;
 	}
 

@@ -16,7 +16,7 @@ class Pickup{
 public:
 
 	Pickup(uint8_t canid);
-	void Toggle();
+	void Toggle(float speed);
 
 
 

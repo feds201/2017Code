@@ -33,6 +33,8 @@ Auton::Auton(DriveTrain* drive, AutoAim *aim, Shooter *shoot) {
 
 	alist->ir = new DigitalInput(0);
 
+	alist->found = false;
+
 }
 
 double Auton::Update() {
@@ -92,7 +94,7 @@ void Auton::Drive() {
 	alist->iroutput = alist->ir->Get();
 
 
-	if (alist->drivedist == 0 && alist->found == false) {
+	if (alist->drivedist == 0 && alist->found == false && alist->cenx2) {
 		alist->state = outOfView;
 	} else {
 		alist->state = inView;
@@ -112,11 +114,11 @@ void Auton::Drive() {
 
 		if(switches->rotDir == counterclockwise){
 
-		alist->drivetrain->Drive(0, -0.25);
+		alist->drivetrain->Drive(0, -0.3);
 
 		}else{
 
-		alist->drivetrain->Drive(0, 0.25);
+		alist->drivetrain->Drive(0, 0.3);
 
 		}
 
@@ -279,7 +281,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->time.Start();
 
-				while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
+				while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
 					alist->drivetrain->Drive(-0.7, 0);
 				}
 
@@ -383,7 +385,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->time.Start();
 
-				while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
+				while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
 					alist->drivetrain->Drive(-0.7, 0);
 				}
 
@@ -451,7 +453,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->time.Start();
 
-				while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
+				while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
 					alist->drivetrain->Drive(-0.7, 0);
 				}
 
@@ -590,7 +592,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		alist->time.Start();
 
-		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
+		while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(-0.7, 0);
 		}
 

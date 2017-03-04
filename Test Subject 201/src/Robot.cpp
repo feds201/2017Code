@@ -29,6 +29,7 @@ class Robot: public frc::SampleRobot {
 	Edge speeddown;
 	Edge SpinUp;
 	Edge light;
+	Edge revpickup;
 	Solenoid frontlight;
 	Solenoid backlight;
 	AutoAim aim;
@@ -43,7 +44,7 @@ public:
 			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain, &aim, &shooter), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
-			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), light(joy2.GetRawButton(9)),
+			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), light(joy2.GetRawButton(9)), revpickup(joy2.GetRawButton(4)),
 			frontlight(9, 0), backlight(9, 1), aim(&drivetrain), ballIn(6), pressure(1), camera(), cam2()
 	{
 
@@ -89,9 +90,7 @@ public:
 		bool ison = false;
 		bool lightstat = false;
 
-		Shooter::shooterSpeed spd = Shooter::lowGoal;
-
-		camera.SetExposureManual(1);
+		camera.SetExposureAuto();
 		cam2.SetExposureAuto();
 
 		shooter.returnStirToHome();
@@ -113,8 +112,13 @@ public:
 			speeddown.update(joy2.GetRawButton(7));
 			SpinUp.update(joy2.GetRawButton(2));
 			light.update(joy2.GetRawButton(9));
+			revpickup.update(joy2.GetRawButton(4));
 
 			//Execution Of Robot Functions Based On Controller Input
+
+			if(revpickup.isPressed()){
+				pickup.Toggle(0.6);
+			}
 
 			if(light.isPressed()){
 				if(lightstat == false)
@@ -156,7 +160,7 @@ public:
 			}
 
 			if (pick.isPressed())
-				pickup.Toggle();
+				pickup.Toggle(-0.6);
 
 			//DriveTrain Controls
 
@@ -172,7 +176,7 @@ public:
 			if(joy2.GetRawAxis(2) > 0.7)
 				aim.Aim();
 
-			frontlight.Set(lightstat);
+			backlight.Set(lightstat);
 
 			if(ballIn.Get() && ison){
 				joy2.SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 1);
