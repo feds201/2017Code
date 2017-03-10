@@ -71,6 +71,14 @@ double Auton::Update() {
 
 		//SmartDashboard::PutNumber("dist", alist->distcalc1);
 
+		if(alist->cenx2 > 0){
+
+			alist->isBolth = true;
+
+		}else{
+			alist->isBolth = false;
+		}
+
 		}
 
 	SmartDashboard::PutNumber("Dist From Center", alist->dist);
@@ -99,6 +107,10 @@ void Auton::Drive() {
 	} else {
 		alist->state = inView;
 		alist->found = true;
+	}
+
+	if(!alist->isBolth && alist->found){
+		alist->state = wasfound;
 	}
 
 	if (alist->iroutput)
@@ -140,6 +152,17 @@ void Auton::Drive() {
 
 		alist->drivetrain->Drive(-0.5, alist->drivedist);
 
+		break;
+
+	case wasfound:
+
+		if(!alist->iroutput){
+			alist->drivetrain->Drive(-0.5, 0);
+		}else{
+
+		alist->drivetrain->Drive(0, 0);
+		alist->done = true;
+		}
 		break;
 
 	case done:
@@ -396,7 +419,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->time.Start();
 
-				while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
+				while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
 					alist->drivetrain->Drive(-0.7, 0);
 				}
 
@@ -603,7 +626,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		alist->time.Start();
 
-		while (alist->time.Get() < 5 && robot->IsEnabled() && robot->IsAutonomous()) {
+		while (alist->time.Get() < 4 && robot->IsEnabled() && robot->IsAutonomous()) {
 			alist->drivetrain->Drive(-0.7, 0);
 		}
 

@@ -29,7 +29,7 @@ private:
 	enum aimstate{found, lost, atGoal, ag};
 
 	enum autonstate {
-			outOfView, inRangeL, inRangeR, inRange, inView, done
+			outOfView, inRangeL, inRangeR, inRange, inView, done, wasfound
 		};
 
 	enum autonmode{gear, shoot, gearandshoot};
@@ -76,6 +76,7 @@ private:
 
 		Timer time;
 
+		bool isBolth;
 
 		bool ongoal = false;
 		bool done = false;

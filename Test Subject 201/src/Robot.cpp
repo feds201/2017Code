@@ -58,14 +58,16 @@ public:
 		camera.SetFPS(10);
 		cam2.SetResolution(480, 320);
 		camera.SetResolution(1280, 720);
-		camera.SetExposureManual(1);
+		camera.SetExposureManual(32);
 		cam2.SetFPS(10);
+		camera.SetExposureManual(2);
+		cam2.SetExposureManual(2);
 	}
 
 	void Autonomous() {
 
-		camera.SetExposureManual(1);
-		cam2.SetExposureManual(1);
+		camera.SetExposureManual(2);
+		cam2.SetExposureManual(2);
 
 		backlight.Set(true);
 		frontlight.Set(true);
@@ -91,16 +93,18 @@ public:
 		bool lightstat = false;
 		bool shooterstat = false;
 
-		camera.SetExposureAuto();
-		cam2.SetExposureAuto();
+		//camera.SetExposureManual(8);
+		//cam2.SetExposureManual(8);
 
 		shooter.returnStirToHome();
 		shooter.Stop();
 
 		while (IsOperatorControl() && IsEnabled()) {
 
-			frontlight.Set(false);
+			camera.SetExposureAuto();
+			cam2.SetExposureAuto();
 
+			frontlight.Set(false);
 			//Button Updates
 
 			shift.update(joy.GetRawButton(1));
