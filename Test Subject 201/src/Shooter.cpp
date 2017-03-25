@@ -92,17 +92,19 @@ if(!slist->started){
 }else{
 	slist->input = slist->stirenc->GetValue();
 
-	if(slist->input > 2900 && !slist->lasttime){
+	SmartDashboard::PutNumber("ALJB", slist->stirenc->GetValue());
+
+	if(slist->input > 3000 && !slist->lasttime){
 		slist->counts++;
 		slist->lasttime = true;
 
-	}else if(slist->input < 2900){
+	}else if(slist->input < 3000){
 		slist->lasttime = false;
 
 	}
 	if(!slist->direction){
 
-		if(slist->counts >= 70){
+		if(slist->counts >= 35){  //Change this number to change sweep dist of agitator
 			slist->counts = 0;
 			slist->motorin = slist->motorin*-1;
 			slist->direction = true;

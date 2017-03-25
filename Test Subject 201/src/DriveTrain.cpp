@@ -47,8 +47,8 @@ DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t 
 
 void DriveTrain::Drive(float fwd, float trn){
 
-	mlist->Lmotors = trn - fwd/2;
-	mlist->Rmotors = trn + fwd/2;
+	mlist->Lmotors = trn - fwd;
+	mlist->Rmotors = trn + fwd;
 
 	mlist->Lmotor1->Set(mlist->Lmotors);
 	mlist->Lmotor2->Set(mlist->Lmotors);
@@ -64,6 +64,8 @@ void DriveTrain::Shift(){
 	if(slist->shifter1->Get() == frc::DoubleSolenoid::Value::kForward){
 		slist->shifter1->Set(frc::DoubleSolenoid::Value::kReverse);
 		SmartDashboard::PutNumber("Gear", 2);
+		mlist->Lmotor1->SetEncPosition(0);
+		mlist->Rmotor1->SetEncPosition(0);
 	}else{
 		slist->shifter1->Set(frc::DoubleSolenoid::Value::kForward);
 		SmartDashboard::PutNumber("Gear", 1);
@@ -77,12 +79,12 @@ float DriveTrain::getMotorVel(motorSide encside){
 
 	case leftSide :
 
-		return(mlist->Lmotor1->GetEncVel());
+		return(mlist->Lmotor1->GetEncPosition());
 
 		break;
 	case rightSide :
 
-		return(mlist->Rmotor1->GetEncVel());
+		return(mlist->Rmotor1->GetEncPosition());
 
 		break;
 	default :

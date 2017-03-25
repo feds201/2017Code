@@ -10,6 +10,22 @@
 #include"Auton.h"
 #include"AutoAim.h"
 
+/*
+ *
+ * TODO:
+ *
+ * Update Firmware - 5 MIN
+ * Check for floating current - 5 MIN
+ * Double check camera feed - 2 MIN
+ * Test input scaling - 7 MIN
+ * Test encoders - 1 MIN
+ * fix stirrer - 5 MIN
+ * fix pressure trans - 5 MIN
+ *
+ *
+ */
+
+
 class Robot: public frc::SampleRobot {
 	Joystick joy;
 	Joystick joy2;
@@ -37,6 +53,7 @@ class Robot: public frc::SampleRobot {
 	AnalogInput pressure;
 	cs::UsbCamera camera;
 	cs::UsbCamera cam2;
+	PowerDistributionPanel pdp;
 
 public:
 
@@ -45,7 +62,7 @@ public:
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
 			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), light(joy2.GetRawButton(9)), revpickup(joy2.GetRawButton(4)),
-			frontlight(9, 0), backlight(9, 1), aim(&drivetrain), ballIn(6), pressure(1), camera(), cam2()
+			frontlight(9, 0), backlight(9, 1), aim(&drivetrain), ballIn(6), pressure(1), camera(), cam2(), pdp(0)
 	{
 
 
@@ -75,6 +92,9 @@ public:
 		auton.Routes(this);
 
 		}
+
+
+
 	float deadzone(float f) {
 		if (fabs(f) < .15)
 			return 0.0f;
@@ -86,6 +106,8 @@ public:
 		}
 	}
 
+
+
 	void OperatorControl() override {
 
 		float speed = 3360;
@@ -93,8 +115,8 @@ public:
 		bool lightstat = false;
 		bool shooterstat = false;
 
-		//camera.SetExposureManual(8);
-		//cam2.SetExposureManual(8);
+		//camera.SetExposureManual(2);
+		//cam2.SetExposureManual(2);
 
 		shooter.returnStirToHome();
 		shooter.Stop();
@@ -212,7 +234,15 @@ public:
 
 			SmartDashboard::PutNumber("Dist From Target", aim.DistCalc());
 
-			SmartDashboard::PutNumber("Pressure", (3631/pressure.GetValue())*100);
+			SmartDashboard::PutNumber("Pressure", pressure.GetValue());
+
+			SmartDashboard::PutNumber("AMPS of of PDP CH 14", pdp.GetCurrent(14));
+			SmartDashboard::PutNumber("AMPS of of PDP CH 15", pdp.GetCurrent(15));
+			SmartDashboard::PutNumber("AMPS of of PDP CH 1", pdp.GetCurrent(1));
+			SmartDashboard::PutNumber("AMPS of of PDP CH 2", pdp.GetCurrent(2));
+			SmartDashboard::PutNumber("AMPS of of PDP CH 3", pdp.GetCurrent(3));
+			SmartDashboard::PutNumber("AMPS of of PDP CH 12", pdp.GetCurrent(12));
+			SmartDashboard::PutNumber("AMPS of of PDP CH 13", pdp.GetCurrent(13));
 
 			frc::Wait(0.005);
 		}

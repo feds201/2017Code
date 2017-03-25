@@ -344,6 +344,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		std::cout << "Red Center Gear" << std::endl;
 
+/*
+
 				//Go Foward
 				//Go For Gear
 
@@ -358,6 +360,20 @@ int Auton::Routes(frc::SampleRobot *robot) {
 				while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 					Drive();
 				}
+
+*/
+
+
+		alist->time.Start();
+		alist->time.Reset();
+
+		while(alist->time.Get() < 7 && !alist->ir->Get() && robot->IsAutonomous() && robot->IsEnabled()){
+
+			alist->drivetrain->Drive(-0.25, 0);
+
+		}
+		alist->drivetrain->Drive(0, 0);
+
 
 	}
 
@@ -550,6 +566,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		std::cout << "Blue Center Gear" << std::endl;
 
+		/*
+
 		//Go Foward
 		//Go For Gear
 
@@ -564,6 +582,21 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
+
+*/
+
+
+
+		alist->time.Start();
+		alist->time.Reset();
+
+		while(alist->time.Get() < 7 && !alist->ir->Get() && robot->IsAutonomous() && robot->IsEnabled()){
+
+			alist->drivetrain->Drive(-0.25, 0);
+
+		}
+		alist->drivetrain->Drive(0, 0);
+
 
 	}
 
