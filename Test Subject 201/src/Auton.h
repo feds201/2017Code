@@ -29,7 +29,7 @@ private:
 	enum aimstate{found, lost, atGoal, ag};
 
 	enum autonstate {
-			outOfView, inRangeL, inRangeR, inRange, inView, done, wasfound
+			outOfView, inRange, inView, done
 		};
 
 	enum autonmode{gear, shoot, gearandshoot};
@@ -81,6 +81,8 @@ private:
 		bool ongoal = false;
 		bool done = false;
 		bool found = false;
+
+		bool resenc = false;
 
 	};
 

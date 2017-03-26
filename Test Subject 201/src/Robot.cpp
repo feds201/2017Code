@@ -14,11 +14,8 @@
  *
  * TODO:
  *
- * Update Firmware - 5 MIN
- * Check for floating current - 5 MIN
- * Double check camera feed - 2 MIN
- * Test input scaling - 7 MIN
- * Test encoders - 1 MIN
+ *
+ * fix auton
  * fix stirrer - 5 MIN
  * fix pressure trans - 5 MIN
  *
@@ -46,6 +43,7 @@ class Robot: public frc::SampleRobot {
 	Edge SpinUp;
 	Edge light;
 	Edge revpickup;
+	Edge TURBO;
 	Solenoid frontlight;
 	Solenoid backlight;
 	AutoAim aim;
@@ -61,7 +59,7 @@ public:
 			joy(0), joy2(1), drivetrain(4, 3, 7, 5, 8, 0, 1), auton(&drivetrain, &aim, &shooter), shift(joy.GetRawButton(1)),
 			flipper(), lifter(0), pickup(6), shooter(1, 2), flip(joy2.GetRawButton(5)), lift(joy.GetRawButton(2)),
 			shoot(joy2.GetRawButton(6)), pick(joy2.GetRawButton(3)), speedup(joy2.GetRawButton(8)),
-			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), light(joy2.GetRawButton(9)), revpickup(joy2.GetRawButton(4)),
+			speeddown(joy2.GetRawButton(7)), SpinUp(joy2.GetRawButton(2)), light(joy2.GetRawButton(9)), revpickup(joy2.GetRawButton(4)), TURBO(joy.GetRawButton(9)),
 			frontlight(9, 0), backlight(9, 1), aim(&drivetrain), ballIn(6), pressure(1), camera(), cam2(), pdp(0)
 	{
 
@@ -115,6 +113,7 @@ public:
 		bool lightstat = false;
 		bool shooterstat = false;
 
+		double mult;
 		//camera.SetExposureManual(2);
 		//cam2.SetExposureManual(2);
 
@@ -140,6 +139,7 @@ public:
 			SpinUp.update(joy2.GetRawButton(2));
 			light.update(joy2.GetRawButton(9));
 			revpickup.update(joy2.GetRawButton(4));
+			TURBO.update(joy.GetRawButton(9));
 
 			//Execution Of Robot Functions Based On Controller Input
 
@@ -194,9 +194,15 @@ public:
 			if (pick.isPressed())
 				pickup.Toggle(-0.6);
 
+			if(TURBO.getState()){
+				mult = 1;
+			}else{
+				mult = 0.5;
+			}
+
 			//DriveTrain Controls
 
-			drivetrain.Drive(deadzone(joy.GetRawAxis(1)), deadzone(joy.GetRawAxis(4))/2);
+			drivetrain.Drive(deadzone(joy.GetRawAxis(1))*mult, (deadzone(joy.GetRawAxis(4))/2)*mult);
 
 			if(ison == true){
 				shooter.SpinUp();

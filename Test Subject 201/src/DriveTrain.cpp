@@ -45,6 +45,7 @@ DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t 
 
 }
 
+
 void DriveTrain::Drive(float fwd, float trn){
 
 	mlist->Lmotors = trn - fwd;
@@ -79,12 +80,12 @@ float DriveTrain::getMotorVel(motorSide encside){
 
 	case leftSide :
 
-		return(mlist->Lmotor1->GetEncPosition());
+		return(mlist->Lmotor1->GetEncVel());
 
 		break;
 	case rightSide :
 
-		return(mlist->Rmotor1->GetEncPosition());
+		return(mlist->Rmotor1->GetEncVel());
 
 		break;
 	default :
@@ -102,3 +103,36 @@ double DriveTrain::getAmps(){
 
 }
 
+float DriveTrain::getEncPoss(motorSide encside){
+
+	switch(encside){
+
+		case leftSide :
+
+			return(mlist->Lmotor1->GetEncPosition());
+
+			break;
+		case rightSide :
+
+			return(mlist->Rmotor1->GetEncPosition());
+
+			break;
+		default :
+
+			return 0;
+			break;
+
+		}
+
+
+}
+
+void DriveTrain::resEncPoss(){
+
+	mlist->Lmotor1->SetEncPosition(0);
+	mlist->Rmotor1->SetEncPosition(0);
+
+	mlist->Lmotor1->SetEncPosition(0);
+	mlist->Rmotor1->SetEncPosition(0);
+
+}

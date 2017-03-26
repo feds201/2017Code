@@ -14,10 +14,14 @@
 class DriveTrain {
 public:
 
+	enum scal{negtopos, postoneg};
+
 	DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t Rcanid2, int PCMCanid, int shifter1fwd,
 			int shifter1rev);
 
 	void Drive(float trn, float fwd);
+
+	float Scaling(float i);
 
 	void Shift();
 
@@ -26,6 +30,10 @@ public:
 	enum motorSide{leftSide, rightSide};
 
 	float getMotorVel(motorSide encside);
+
+	float getEncPoss(motorSide encside);
+
+	void resEncPoss();
 
 	double getAmps();
 
@@ -47,6 +55,12 @@ private:
 
 		float Lmotors;
 		float Rmotors;
+
+		float input;
+		float was;
+		bool isrev;
+
+		scal negorpos;
 
 	};
 
