@@ -84,6 +84,9 @@ private:
 
 		bool resenc = false;
 
+		bool part1 = false;
+		bool part2 = false;
+
 	};
 
 	struct switches{

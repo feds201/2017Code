@@ -325,23 +325,29 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->drivetrain->resEncPoss();
 
-				while (robot->IsEnabled() && robot->IsAutonomous()) {
+				while (robot->IsEnabled() && robot->IsAutonomous() && !alist->part1) {
 					//driving fwd
 					while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 					alist->drivetrain->Drive(-0.7, 0);
 					}
+					alist->part1 = true;
+				}
 					alist->drivetrain->resEncPoss();
 
+					while (robot->IsEnabled() && robot->IsAutonomous() && !alist->part2) {
 					//making the turn
 					while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 					alist->drivetrain->Drive(0, 0.3);
 					}
-
+					alist->part2 = true;
+					}
 					//using camera
+					while (robot->IsEnabled() && robot->IsAutonomous()) {
 					while (!alist->done) {
 					Drive();
 					}
-				}
+					}
+
 	}
 
 	if (switches->Team == red && switches->poss == left
@@ -370,19 +376,20 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		alist->drivetrain->resEncPoss();
 
-			while (robot->IsEnabled() && robot->IsAutonomous()) {
+			while (robot->IsEnabled() && robot->IsAutonomous() && !alist->part1) {
 //drive fwd
 					while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 						alist->drivetrain->Drive(-0.7, 0);
 					}
-
+					alist->part1 = true;
+			}
 					alist->drivetrain->resEncPoss();
 		//use camera
 				while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 					Drive();
 				}
 
-				}
+
 	}
 
 	if (switches->Team == red && switches->poss == center
@@ -443,21 +450,26 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->drivetrain->resEncPoss();
 
-			while (robot->IsEnabled() && robot->IsAutonomous()) {
+			while (robot->IsEnabled() && robot->IsAutonomous() && !alist->part1) {
 				//go fwd
 				while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 					alist->drivetrain->Drive(-0.7, 0);
 				}
+				alist->part1 = true;
+			}
 				alist->drivetrain->resEncPoss();
 //make turn
+				while (robot->IsEnabled() && robot->IsAutonomous() && !alist->part2) {
 				while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 					alist->drivetrain->Drive(0, 0.3);
 				}
 //use camera
+				alist->part2 = true;
+				}
 				while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 					Drive();
 				}
-			}
+
 
 	}
 
@@ -518,21 +530,26 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 				alist->drivetrain->resEncPoss();
 
-			while (robot->IsEnabled() && robot->IsAutonomous()) {
+			while (robot->IsEnabled() && robot->IsAutonomous() && !alist->part1) {
 				//fwd
 				while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 					alist->drivetrain->Drive(-0.7, 0);
 				}
+				alist->part1 = true;
+			}
 				alist->drivetrain->resEncPoss();
 				//trn
+				while(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2){
 				while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 					alist->drivetrain->Drive(0, 0.3);
 				}
 //camera
+				alist->part2 = true;
+				}
 				while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 					Drive();
 				}
-			}
+
 	}
 
 	if (switches->Team == blue && switches->poss == left
@@ -593,17 +610,18 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		//Go Foward
 		//Go For Gear
 //fwd
-		while (robot->IsEnabled() && robot->IsAutonomous()) {
+		while (robot->IsEnabled() && robot->IsAutonomous() && !alist->part1) {
 			while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 				alist->drivetrain->Drive(-0.7, 0);
 			}
-
+			alist->part1 = true;
+		}
 //camera
 
 		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
-		}
+
 	}
 
 	if (switches->Team == blue && switches->poss == center
@@ -665,21 +683,26 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 		alist->drivetrain->resEncPoss();
 
-	while (robot->IsEnabled() && robot->IsAutonomous()) {
+	while (robot->IsEnabled() && robot->IsAutonomous() && !alist->part1) {
 		//fwd
 		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 			alist->drivetrain->Drive(-0.7, 0);
 		}
+		alist->part1 = true;
+	}
 		alist->drivetrain->resEncPoss();
 //trn
+		while(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2){
 		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
 			alist->drivetrain->Drive(0, 0.3);
+		}
+		alist->part2 = true;
 		}
 //camera
 		while (!alist->done && robot->IsEnabled() && robot->IsAutonomous()) {
 			Drive();
 		}
-	}
+
 	}
 
 	if (switches->Team == blue && switches->poss == right
