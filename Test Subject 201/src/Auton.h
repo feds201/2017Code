@@ -86,6 +86,8 @@ private:
 
 		bool part1 = false;
 		bool part2 = false;
+		bool part3 = false;
+		bool part4 = true;
 
 	};
 

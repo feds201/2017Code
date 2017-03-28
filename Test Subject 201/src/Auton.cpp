@@ -104,6 +104,8 @@ void Auton::Drive() {
 		alist->state = done;
 	}
 
+	alist->state = inView;
+
 	switch (alist->state) {
 
 	case outOfView:
@@ -139,34 +141,43 @@ void Auton::Drive() {
 			alist->resenc = true;
 		}
 
-		if(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
+		while(!alist->part3){
+
+		if(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 70676 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -69228){
 
 		alist->drivetrain->Drive(-0.3, alist->drivedist);
 
 		}else{
-			alist->resenc = false;
-			alist->done = true;
+			alist->drivetrain->resEncPoss();
+			alist->part3 = true;
 		}
 
+		}
+
+		while(!alist->part4){
+
+			if(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 47538 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -46403){
+
+						alist->drivetrain->Drive(-0.2, 0);
+
+						std::cout << "2nd part" << std::endl;
+
+					}else if(!alist->part4){
+
+					alist->drivetrain->Drive(0, 0);
+					alist->part4 = true;
+					}
+
+
+
+		}
 
 		break;
 
 	case done:
 
-		if(!alist->resenc){
-			alist->drivetrain->resEncPoss();
-			alist->resenc = true;
-		}
+		std::cout << "Done" << std::endl;
 
-		if(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
-
-			alist->drivetrain->Drive(-0.2, 0);
-
-		}else{
-
-		alist->drivetrain->Drive(0, 0);
-
-		}
 		break;
 	}
 }
@@ -378,8 +389,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 			while (robot->IsEnabled() && robot->IsAutonomous() && !alist->part1) {
 //drive fwd
-					while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 10 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10){
-						alist->drivetrain->Drive(-0.7, 0);
+					while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 46377 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -46233){
+						alist->drivetrain->Drive(-0.4, 0);
 					}
 					alist->part1 = true;
 			}
