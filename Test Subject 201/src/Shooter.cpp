@@ -104,7 +104,7 @@ if(!slist->started){
 	}
 	if(!slist->direction){
 
-		if(slist->counts >= 35){  //Change this number to change sweep dist of agitator
+		if(slist->counts >= 20){  //Change this number to change sweep dist of agitator
 			slist->counts = 0;
 			slist->motorin = slist->motorin*-1;
 			slist->direction = true;

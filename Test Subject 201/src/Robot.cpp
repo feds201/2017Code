@@ -70,6 +70,8 @@ public:
 		camera = CameraServer::GetInstance()->StartAutomaticCapture();
 		cam2 = CameraServer::GetInstance()->StartAutomaticCapture();
 
+		drivetrain.resEncPoss();
+
 		camera.SetFPS(10);
 		cam2.SetResolution(480, 320);
 		camera.SetResolution(1280, 720);
@@ -83,6 +85,8 @@ public:
 
 		camera.SetExposureManual(8);
 		cam2.SetExposureManual(8);
+
+		drivetrain.resEncPoss();
 
 		backlight.Set(true);
 		frontlight.Set(true);
