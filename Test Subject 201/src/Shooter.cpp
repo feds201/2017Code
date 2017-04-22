@@ -8,6 +8,7 @@
 #include"WPILib.h"
 #include"CANTalon.h"
 #include <iostream>
+#include "Timer.h"
 
 Shooter::Shooter(uint8_t canid, uint8_t canid2){
 
@@ -84,15 +85,21 @@ if(!slist->started){
 		slist->motorin = 0.7;
 		slist->started = true;
 		slist->direction = false;
+		slist->time.Reset();
+		slist->time.Start();
 
 	}else{
 		slist->motorin = -0.7;
+		slist->time.Start();
+		slist->time.Reset();
 	}
 
 }else{
 	slist->input = slist->stirenc->GetValue();
 
 	SmartDashboard::PutNumber("ALJB", slist->stirenc->GetValue());
+
+	/*
 
 	if(slist->input > 3000 && !slist->lasttime){
 		slist->counts++;
@@ -115,6 +122,18 @@ if(!slist->started){
 		slist->direction = false;
 
 	}
+*/
+if(slist->time.Get() >= 1.8 && slist->direction == false){
+	slist->motorin = slist->motorin*-1;
+	slist->time.Reset();
+	slist->direction = true;
+}else if(slist->direction && slist->limit->Get()){
+	slist->motorin = slist->motorin*-1;
+	slist->direction = false;
+	slist->time.Reset();
+}
+
+slist->stirer->Set(slist->motorin);
 
 }
 
@@ -128,6 +147,7 @@ void Shooter::returnStirToHome(){
 	slist->direction = false;
 	slist->counts = 0;
 	slist->stirer->Set(0);
+	slist->time.Reset();
 
 }
 

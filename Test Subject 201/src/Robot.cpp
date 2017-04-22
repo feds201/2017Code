@@ -74,9 +74,9 @@ public:
 
 		camera.SetFPS(10);
 		cam2.SetResolution(480, 320);
-		camera.SetResolution(1280, 720);
+		camera.SetResolution(480, 320); //was 1280, 720
 		camera.SetExposureManual(32);
-		cam2.SetFPS(10);
+		cam2.SetFPS(25);
 		camera.SetExposureManual(2);
 		cam2.SetExposureManual(2);
 	}
@@ -87,6 +87,14 @@ public:
 		cam2.SetExposureManual(8);
 
 		drivetrain.resEncPoss();
+
+		while(drivetrain.getEncPoss(DriveTrain::motorSide::leftSide) != 0 or drivetrain.getEncPoss(DriveTrain::motorSide::rightSide) != 0){
+			drivetrain.resEncPoss();
+		}
+
+		drivetrain.resEncPoss();
+
+		frc::Wait(0.25);
 
 		backlight.Set(true);
 		frontlight.Set(true);
@@ -122,8 +130,11 @@ public:
 		bool shooterstat = false;
 
 		double mult;
-		camera.SetExposureManual(8);
-		cam2.SetExposureManual(8);
+		//camera.SetExposureManual(8);
+		//cam2.SetExposureManual(8);
+
+		camera.SetExposureAuto();
+		cam2.SetExposureAuto();
 
 		shooter.returnStirToHome();
 		shooter.Stop();
@@ -209,8 +220,10 @@ public:
 
 			if(joy.GetRawAxis(3) > 0.6){
 				mult = 1;
+				joy.SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 1);
 			}else{
 				mult = 0.5;
+				joy.SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 0);
 			}
 
 			//DriveTrain Controls

@@ -10,6 +10,7 @@
 
 #include"WPILib.h"
 #include"CANTalon.h"
+#include"Timer.h"
 
 class Shooter{
 
@@ -55,6 +56,8 @@ private:
 		shooterSpeed spd;
 
 		float speed;
+
+		Timer time;
 
 	};
 

@@ -40,9 +40,6 @@ DriveTrain::DriveTrain(uint8_t Lcanid, uint8_t Lcanid2, uint8_t Rcanid, uint8_t 
 
 	slist->shifter1->Set(frc::DoubleSolenoid::Value::kForward);
 
-
-
-
 }
 
 

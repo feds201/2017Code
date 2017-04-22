@@ -260,21 +260,21 @@ int Auton::Routes(frc::SampleRobot *robot) {
 				alist->drivetrain->resEncPoss();
 
 					//driving fwd
-					while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 192651 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -198805){
-					if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 24){
-					alist->drivetrain->Drive(-0.4, 0.01);
+					while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 156187 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -160757){
+					if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 30){
+					alist->drivetrain->Drive(-0.4, 0);
 					}else{
 					break;
 					}
 					}
 					alist->part1 = true;
 
+					alist->drivetrain->Drive(0, 0);
+
 					alist->drivetrain->resEncPoss();
 
-					frc::Wait(0.05);
-
-					while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 25454 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 35131){
-					if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2 && alist->drivetrain->getAmps() < 24){
+					while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 23024 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 10480){
+					if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2 && alist->drivetrain->getAmps() < 30){
 					alist->drivetrain->Drive(0, 0.3);
 					}else{
 					break;
@@ -286,7 +286,7 @@ int Auton::Routes(frc::SampleRobot *robot) {
 					alist->drivetrain->resEncPoss();
 
 					while(robot->IsAutonomous() && robot->IsEnabled() && !alist->part3 && alist->drivetrain->getAmps() < 30){
-					alist->drivetrain->Drive(-0.4, 0);
+					alist->drivetrain->Drive(-0.4, -0.04);
 					}
 					alist->drivetrain->Drive(0, 0);
 
@@ -321,9 +321,9 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		alist->drivetrain->resEncPoss();
 		alist->drivetrain->resEncPoss();
 
-		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 164591 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -161864){
-			if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 24){
-				alist->drivetrain->Drive(-0.4, 0.01);
+		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 144591 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -141864){
+			if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 35){
+				alist->drivetrain->Drive(-0.4, 0.02);
 			}else{
 				break;
 			}
@@ -398,9 +398,9 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		alist->drivetrain->resEncPoss();
 
 							//driving fwd
-							while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 187651 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -193805){
-							if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 24){
-							alist->drivetrain->Drive(-0.4, 0.015);
+							while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 191837 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -189351){
+							if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 35){
+							alist->drivetrain->Drive(-0.4, 0.02);
 							}else{
 							break;
 							}
@@ -411,8 +411,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 							frc::Wait(0.05);
 
-							while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) > -20653 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -30600){
-							if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2 && alist->drivetrain->getAmps() < 24){
+							while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) > -24857 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -33986){
+							if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2 && alist->drivetrain->getAmps() < 35){
 							alist->drivetrain->Drive(0, -0.3);
 							}else{
 							break;
@@ -423,8 +423,8 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 							alist->drivetrain->resEncPoss();
 
-							while(robot->IsAutonomous() && robot->IsEnabled() && !alist->part3 && alist->drivetrain->getAmps() < 27){
-							alist->drivetrain->Drive(-0.4, 0);
+							while(robot->IsAutonomous() && robot->IsEnabled() && !alist->part3 && alist->drivetrain->getAmps() < 35){
+							alist->drivetrain->Drive(-0.4, 0.01);
 							}
 							alist->drivetrain->Drive(0, 0);
 
@@ -488,34 +488,41 @@ int Auton::Routes(frc::SampleRobot *robot) {
 				//Go Forward
 				//Go For Gear
 
-		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 192651 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -198805){
-			if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 24){
-				alist->drivetrain->Drive(-0.4, 0);
-			}else{
-				break;
-			}
-			}
-			alist->part1 = true;
-			alist->drivetrain->resEncPoss();
+		alist->drivetrain->resEncPoss();
 
-		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 31088 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 39919){
-			if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2 && alist->drivetrain->getAmps() < 24){
-				alist->drivetrain->Drive(0, 0.3);
-			}else{
-				break;
-			}
-			}
-			alist->part2 = true;
-			alist->drivetrain->resEncPoss();
+							//driving fwd
+							while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 189837 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -187351){
+							if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 35){
+							alist->drivetrain->Drive(-0.4, 0.02);
+							}else{
+							break;
+							}
+							}
+							alist->part1 = true;
 
-		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 67402 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < -72183){
-			if(robot->IsAutonomous() && robot->IsEnabled() && !alist->part3 && alist->drivetrain->getAmps() < 24){
-				alist->drivetrain->Drive(-0.4, 0);
-			}else{
-				break;
-			}
-			}
-			alist->part3 = true;
+							alist->drivetrain->resEncPoss();
+
+							frc::Wait(0.05);
+
+							while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 23857 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < 29986){
+							if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2 && alist->drivetrain->getAmps() < 35){
+							alist->drivetrain->Drive(0, 0.3);
+							}else{
+							break;
+							}
+							}
+							alist->part2 = true;
+							alist->part3 = false;
+
+							alist->drivetrain->resEncPoss();
+
+							while(robot->IsAutonomous() && robot->IsEnabled() && !alist->part3 && alist->drivetrain->getAmps() < 35){
+							alist->drivetrain->Drive(-0.4, 0.02);
+							}
+							alist->drivetrain->Drive(0, 0);
+
+							alist->part3 = true;
+							alist->drivetrain->Drive(0, 0);
 
 	}
 
@@ -573,15 +580,18 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		std::cout << "Blue Center Gear" << std::endl;
 
 		alist->drivetrain->resEncPoss();
+				alist->drivetrain->resEncPoss();
 
-				while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 164591 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -161864){
-					if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 24){
-						alist->drivetrain->Drive(-0.4, 0);
+				while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 144591 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -141864){
+					if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 35){
+						alist->drivetrain->Drive(-0.4, 0.02);
 					}else{
 						break;
 					}
 				}
 				alist->part1 = true;
+
+				alist->drivetrain->Drive(0, 0);
 
 	}
 
@@ -632,6 +642,20 @@ int Auton::Routes(frc::SampleRobot *robot) {
 
 	}
 
+	/*
+	 *
+	 * Used in States finals
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 */
+
+
 	if (switches->Team == blue && switches->poss == right
 			&& switches->mode == gear) {
 
@@ -643,36 +667,42 @@ int Auton::Routes(frc::SampleRobot *robot) {
 		//Go For Gear
 
 		alist->drivetrain->resEncPoss();
+		alist->drivetrain->resEncPoss();
 
-		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 192651 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -198805){
-			if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 && alist->drivetrain->getAmps() < 24){
-				alist->drivetrain->Drive(-0.4, 0);
-			}else{
-				break;
-			}
-			}
-			alist->part1 = true;
-			alist->drivetrain->resEncPoss();
+									//driving fwd
+									while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 164473 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -162320
+											){
+									if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part1 /*&& alist->drivetrain->getAmps() < 35 */){
+									alist->drivetrain->Drive(-0.4, 0.02);
+									}else{
+									break;
+									}
+									}
+									alist->part1 = true;
 
-		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) > -31088 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -39919){
-			if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2 && alist->drivetrain->getAmps() < 24){
-				alist->drivetrain->Drive(0, -0.3);
-			}else{
-				break;
-			}
-			}
-			alist->part2 = true;
-			alist->drivetrain->resEncPoss();
+									alist->drivetrain->resEncPoss();
 
-		while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) < 67402 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) < -72183){
-			if(robot->IsAutonomous() && robot->IsEnabled() && !alist->part3 && alist->drivetrain->getAmps() < 24){
-				alist->drivetrain->Drive(-0.4, 0);
-			}else{
-				break;
-			}
-			}
-			alist->part3 = true;
+									frc::Wait(0.05);
 
+									while(alist->drivetrain->getEncPoss(DriveTrain::motorSide::leftSide) > -17084 or alist->drivetrain->getEncPoss(DriveTrain::motorSide::rightSide) > -21382){
+									if(robot->IsEnabled() && robot->IsAutonomous() && !alist->part2 /*&& alist->drivetrain->getAmps() < 35*/){
+									alist->drivetrain->Drive(0, -0.3);
+									}else{
+									break;
+									}
+									}
+									alist->part2 = true;
+									alist->part3 = false;
+
+									alist->drivetrain->resEncPoss();
+
+									while(robot->IsAutonomous() && robot->IsEnabled() && !alist->part3 && alist->drivetrain->getAmps() < 35){
+									alist->drivetrain->Drive(-0.4, 0);
+									}
+									alist->drivetrain->Drive(0, 0);
+
+									alist->part3 = true;
+									alist->drivetrain->Drive(0, 0);
 	}
 
 	if (switches->Team == blue && switches->poss == right
