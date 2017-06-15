@@ -70,13 +70,15 @@ public:
 		camera = CameraServer::GetInstance()->StartAutomaticCapture();
 		cam2 = CameraServer::GetInstance()->StartAutomaticCapture();
 
+		frc::Wait(0.25);
+
 		drivetrain.resEncPoss();
 
 		camera.SetFPS(10);
 		cam2.SetResolution(480, 320);
-		camera.SetResolution(480, 320); //was 1280, 720
+		camera.SetResolution(320, 240); //was 1280, 720
 		camera.SetExposureManual(32);
-		cam2.SetFPS(25);
+		cam2.SetFPS(15);
 		camera.SetExposureManual(2);
 		cam2.SetExposureManual(2);
 	}
@@ -130,6 +132,7 @@ public:
 		bool shooterstat = false;
 
 		double mult;
+		double turnmult;
 		//camera.SetExposureManual(8);
 		//cam2.SetExposureManual(8);
 
@@ -226,9 +229,17 @@ public:
 				joy.SetRumble(frc::GenericHID::RumbleType::kLeftRumble, 0);
 			}
 
+			if(joy.GetRawAxis(2) > 0.6){
+				turnmult = 1;
+				joy.SetRumble(frc::GenericHID::RumbleType::kRightRumble, 1);
+			}else{
+				turnmult = 2;
+				joy.SetRumble(frc::GenericHID::RumbleType::kRightRumble, 0);
+			}
+
 			//DriveTrain Controls
 
-			drivetrain.Drive(deadzone(joy.GetRawAxis(1))*mult, (deadzone(joy.GetRawAxis(4))/2)*mult);
+			drivetrain.Drive(deadzone(joy.GetRawAxis(1))*mult, (deadzone(joy.GetRawAxis(4))/turnmult)*mult);
 
 			if(ison == true){
 				shooter.SpinUp();
